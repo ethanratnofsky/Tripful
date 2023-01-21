@@ -1,0 +1,40 @@
+{
+    "name": "tripful-backend",
+    "version": "1.0.0",
+    "description": "An Express server that serves as a REST API for the Tripful web application.",
+    "main": "app.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "start": "nodemon app.js",
+        "format": "prettier --write \"**/*.{js,json,md}\""
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/ethanratnofsky/Tripful.git"
+    },
+    "keywords": [
+        "express",
+        "tripful",
+        "app",
+        "plan",
+        "trip",
+        "rest",
+        "api"
+    ],
+    "author": "Ethan Ratnofsky",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/ethanratnofsky/Tripful/issues"
+    },
+    "homepage": "https://github.com/ethanratnofsky/Tripful#readme",
+    "dependencies": {
+        "cors": "^2.8.5",
+        "dotenv": "^16.0.3",
+        "express": "^4.18.2",
+        "mongoose": "^6.8.4"
+    },
+    "devDependencies": {
+        "nodemon": "^2.0.20",
+        "prettier": "^2.8.3"
+    }
+}
