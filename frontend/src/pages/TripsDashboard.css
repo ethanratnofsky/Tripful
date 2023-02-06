@@ -1,0 +1,18 @@
+.trips-dashboard-container .filters-container button {
+    margin-right: 10px;
+}
+
+.trips-dashboard-container .trips-container {
+    margin-top: 40px;
+}
+
+.trips-dashboard-container .create-trip-card {
+    height: 200px;
+    width: 200px;
+    background: #d5d5d5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    border-radius: 5px;
+}

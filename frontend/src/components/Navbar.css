@@ -1,0 +1,24 @@
+nav.navbar {
+    display: flex;
+    align-items: center;
+}
+
+nav.navbar .logo {
+    display: inline;
+}
+
+nav.navbar .right-group {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+}
+
+nav.navbar button.create-trip-button {
+    margin-right: 30px;
+}
+
+nav.navbar img.user-profile {
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+}
