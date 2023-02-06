@@ -1,0 +1,28 @@
+.trip-form-container {
+    margin-top: 40px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.trip-form-container input[type=text], input[type=email]{
+    padding: 12px 20px;
+    margin: 8px 0;
+    font-weight: bolder;
+   width: 100%;
+    
+}
+
+.trip-form-container input[type=datetime-local] {
+    padding: 12px 20px;
+    margin: 8px 0;
+    font-family: sans-serif;
+    font-weight: bolder;
+    width: 100%;
+}
+
+.trip-form-container .trip-picture {
+    height: 600px;
+    width: 600px;
+    margin: 0 auto;
+}
