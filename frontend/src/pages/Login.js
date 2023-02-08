@@ -25,7 +25,8 @@ const Login = () => {
         setPhoneNumber(e.target.value.replace(/\D/g, ""));
     };
 
-    const handleSubmit = () => {
+    const handleSubmit = (e) => {
+        e.preventDefault();
         alert("TODO: Logging in with phone number: " + phoneNumber);
     };
 
@@ -35,7 +36,7 @@ const Login = () => {
 
     return (
         <div className="login-container">
-            <form>
+            <form onSubmit={handleSubmit}>
                 <h1>Login or Sign-Up</h1>
                 <input
                     id="phone-number-input"
@@ -47,7 +48,6 @@ const Login = () => {
                 />
                 <input
                     type="submit"
-                    onSubmit={handleSubmit}
                     disabled={phoneNumber.length !== 10}
                     value="Continue"
                 />

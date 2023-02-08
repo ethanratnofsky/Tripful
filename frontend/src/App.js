@@ -13,8 +13,8 @@ const App = () => {
     return (
         <>
             <Navbar />
-            {/* <Login /> */}
-            <TripsDashboard />
+            <Login />
+            {/* <TripsDashboard /> */}
             {/* <CreateTrip /> */}
             {/* <Profile /> */}
         </>
