@@ -3,19 +3,21 @@ import React from "react";
 
 // Pages
 import Navbar from "./components/Navbar";
+import Login from "./pages/Login";
 import TripsDashboard from "./pages/TripsDashboard";
-import Profile from "./pages/Profile";
 import CreateTrip from "./pages/CreateTrip";
+import Profile from "./pages/Profile";
 
 // The main React App component
 const App = () => {
     return (
-        <div className="app-container">
+        <>
             <Navbar />
+            {/* <Login /> */}
             <TripsDashboard />
-            <Profile />
-            <CreateTrip />
-        </div>
+            {/* <CreateTrip /> */}
+            {/* <Profile /> */}
+        </>
     );
 };
 
