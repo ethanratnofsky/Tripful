@@ -1,23 +1,23 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 import TestImg from "../assets/test.png";
 
 import "./Navbar.css";
 
-import { handleCreateTrip } from "../utils/tripUtils";
-
 const Navbar = () => {
     return (
         <nav className="navbar">
-            <h1 className="logo">Tripful</h1>
+            <Link to="/" className="logo-link">
+                <h1 className="logo">Tripful</h1>
+            </Link>
             <div className="right-group">
-                <button
-                    className="create-trip-button"
-                    onClick={handleCreateTrip}
-                >
+                <Link to="/create-trip" className="create-trip-button">
                     Create Trip
-                </button>
-                <img className="user-profile" src={TestImg} alt="User" />
+                </Link>
+                <Link to="/profile">
+                    <img className="user-profile" src={TestImg} alt="User" />
+                </Link>
             </div>
         </nav>
     );

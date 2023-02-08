@@ -15,4 +15,6 @@
     align-items: center;
     cursor: pointer;
     border-radius: 5px;
+    text-decoration: none;
+    color: inherit;
 }

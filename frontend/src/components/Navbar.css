@@ -3,6 +3,11 @@ nav.navbar {
     align-items: center;
 }
 
+nav.navbar .logo-link {
+    text-decoration: none;
+    color: inherit;
+}
+
 nav.navbar .logo {
     display: inline;
 }
@@ -13,8 +18,17 @@ nav.navbar .right-group {
     align-items: center;
 }
 
-nav.navbar button.create-trip-button {
+nav.navbar a.create-trip-button {
+    text-decoration: none;
+    color: inherit;
     margin-right: 30px;
+    border: 1px solid black;
+    padding: 10px 20px;
+    border-radius: 5px;
+}
+
+nav.navbar a.create-trip-button:hover {
+    background-color: #f2f2f2;
 }
 
 nav.navbar img.user-profile {

@@ -1,8 +1,7 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 import "./TripsDashboard.css";
-
-import { handleCreateTrip } from "../utils/tripUtils";
 
 const TripsDashboard = () => {
     const handleFilterUpcoming = () => {
@@ -21,9 +20,9 @@ const TripsDashboard = () => {
                 <button onClick={handleFilterPast}>Past Trips</button>
             </div>
             <div className="trips-container">
-                <div className="create-trip-card" onClick={handleCreateTrip}>
+                <Link to="/create-trip" className="create-trip-card">
                     +
-                </div>
+                </Link>
             </div>
         </div>
     );
