@@ -20,8 +20,10 @@ const TripsDashboard = () => {
                 <button onClick={handleFilterUpcoming}>Upcoming Trips</button>
                 <button onClick={handleFilterPast}>Past Trips</button>
             </div>
-            <div className="trips-container" onClick={handleCreateTrip}>
-                <div className="create-trip-card">+</div>
+            <div className="trips-container">
+                <div className="create-trip-card" onClick={handleCreateTrip}>
+                    +
+                </div>
             </div>
         </div>
     );
