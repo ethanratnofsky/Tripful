@@ -5,6 +5,7 @@ import React from "react";
 import Navbar from "./components/Navbar";
 import TripsDashboard from "./pages/TripsDashboard";
 import Profile from "./pages/Profile";
+import CreateTrip from "./pages/CreateTrip";
 
 // The main React App component
 const App = () => {
@@ -12,7 +13,8 @@ const App = () => {
         <div className="app-container">
             <Navbar />
             <TripsDashboard />
-            {/* <Profile /> */}
+            <Profile />
+            <CreateTrip />
         </div>
     );
 };
