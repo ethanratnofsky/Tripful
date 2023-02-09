@@ -13,12 +13,46 @@
     justify-content: center;
 }
 
-.login-container input[type="tel"] {
-    text-align: center;
+.login-container label.country-code {
+    font-size: 20px;
+    border-radius: 5px 0 0 5px;
+    padding: 5px 10px;
+    border: 2px solid #ccc;
+    border-right: none;
+    color: #ccc;
+    background: white;
 }
 
 .login-container input[type="tel"] {
+    all: unset;
     margin-block: 20px;
     padding: 5px 10px;
-    font-size: 20px ;
+    font-size: 20px;
+    text-align: center;
+    border: 2px solid #ccc;
+    border-radius: 0 5px 5px 0;
+    background: white;
+}
+
+.login-container input[type="tel"]:focus {
+    border-color: #187efb;
+}
+
+.login-container input[type="tel"]:disabled {
+    color: #ccc;
+}
+
+.login-container .verification-code-message {
+    text-align: center;
+    margin-bottom: 0;
+}
+
+.login-container #verification-code-input {
+    border-radius: 5px;
+    width: 6rem;
+}
+
+.login-container .verification-error {
+    color: red;
+    margin-top: 0;
 }

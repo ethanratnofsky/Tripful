@@ -15,6 +15,8 @@ import TripsDashboard from "./pages/TripsDashboard";
 import CreateTrip from "./pages/CreateTrip";
 import Profile from "./pages/Profile";
 
+import ProtectedRoutes from "./utils/ProtectedRoutes";
+
 const Root = () => {
     return (
         <>
@@ -28,10 +30,12 @@ const Root = () => {
 const router = createBrowserRouter(
     createRoutesFromElements(
         <Route path="/" element={<Root />}>
-            <Route index element={<TripsDashboard />} />
             <Route path="login" element={<Login />} />
-            <Route path="create-trip" element={<CreateTrip />} />
-            <Route path="profile" element={<Profile />} />
+            <Route element={<ProtectedRoutes />}>
+                <Route index exact element={<TripsDashboard />} />
+                <Route path="create-trip" element={<CreateTrip />} />
+                <Route path="profile" element={<Profile />} />
+            </Route>
         </Route>
     )
 );
