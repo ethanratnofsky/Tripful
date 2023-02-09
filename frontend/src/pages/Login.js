@@ -28,6 +28,7 @@ const Login = () => {
     const [verificationCode, setVerificationCode] = useState("");
     const [isVerifyingCode, setIsVerifyingCode] = useState(false);
     const [showVerificiationError, setShowVerificationError] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
     const navigate = useNavigate();
 
@@ -54,6 +55,7 @@ const Login = () => {
                     `SMS sent to ${countryCode} ${formattedPhoneNumber}.`
                 );
                 window.confirmationResult = confirmationResult;
+                setIsLoading(false);
                 setIsVerifyingCode(true);
             })
             .catch((error) => {
@@ -83,6 +85,9 @@ const Login = () => {
                 // User couldn't sign in (bad verification code?)
                 console.log("Error: ", error);
                 setShowVerificationError(true);
+            })
+            .finally(() => {
+                setIsLoading(false);
             });
     };
 
@@ -96,10 +101,13 @@ const Login = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        setIsLoading(true);
 
         if (isVerifyingCode) {
+            // Verification code already sent
             verifyCode();
         } else {
+            // Send verification code
             console.log(
                 "Attempting to login in with phone number: " +
                     countryCode +
@@ -151,7 +159,7 @@ const Login = () => {
                         </p>
                         <input
                             id="verification-code-input"
-                            type="tel"
+                            type="text"
                             placeholder="XXXXXX"
                             maxLength={6}
                             value={verificationCode}
@@ -168,7 +176,7 @@ const Login = () => {
                 <input
                     id="submit-button"
                     type="submit"
-                    disabled={phoneNumber.length !== 10}
+                    disabled={phoneNumber.length !== 10 || isLoading}
                     value={isVerifyingCode ? "Verify Code" : "Send Code"}
                 />
             </form>

@@ -23,7 +23,7 @@
     background: white;
 }
 
-.login-container input[type="tel"] {
+.login-container input[type="tel"], .login-container input[type="text"] {
     all: unset;
     margin-block: 20px;
     padding: 5px 10px;
@@ -34,11 +34,11 @@
     background: white;
 }
 
-.login-container input[type="tel"]:focus {
+.login-container input[type="tel"]:focus, .login-container input[type="text"]:focus {
     border-color: #187efb;
 }
 
-.login-container input[type="tel"]:disabled {
+.login-container input[type="tel"]:disabled, .login-container input[type="text"]:disabled {
     color: #ccc;
 }
 
