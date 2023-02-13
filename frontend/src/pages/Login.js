@@ -1,4 +1,8 @@
 import React, { useState, useEffect } from "react";
+import { signInWithPhoneNumber, RecaptchaVerifier } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
+
+import { auth } from "../../firebase.config";
 
 import "./Login.css";
 
@@ -18,38 +22,162 @@ const formatPhoneNumber = (phoneNumberString) => {
 };
 
 const Login = () => {
+    const [countryCode, setCountryCode] = useState("+1");
     const [phoneNumber, setPhoneNumber] = useState("");
     const [formattedPhoneNumber, setFormattedPhoneNumber] = useState("");
+    const [verificationCode, setVerificationCode] = useState("");
+    const [isVerifyingCode, setIsVerifyingCode] = useState(false);
+    const [showVerificiationError, setShowVerificationError] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+
+    const navigate = useNavigate();
+
+    const generateRecaptchaVerifier = () => {
+        window.recaptchaVerifier = new RecaptchaVerifier(
+            "recaptcha-container",
+            {
+                size: "invisible",
+                callback: (response) => {
+                    // reCAPTCHA solved, allow signInWithPhoneNumber.
+                },
+            },
+            auth
+        );
+    };
+
+    const sendVerificationCode = () => {
+        const appVerifier = window.recaptchaVerifier;
+        signInWithPhoneNumber(auth, countryCode + phoneNumber, appVerifier)
+            .then((confirmationResult) => {
+                // SMS sent. Prompt user to type the code from the message, then sign the
+                // user in with confirmationResult.confirm(code).
+                console.log(
+                    `SMS sent to ${countryCode} ${formattedPhoneNumber}.`
+                );
+                window.confirmationResult = confirmationResult;
+                setIsLoading(false);
+                setIsVerifyingCode(true);
+            })
+            .catch((error) => {
+                // Error; SMS not sent
+                console.log(
+                    `SMS was not sent to ${countryCode} ${formattedPhoneNumber}:`,
+                    error
+                );
+                // Reset reCAPTCHA
+                window.recaptchaVerifier.render().then((widgetId) => {
+                    grecaptcha.reset(widgetId);
+                });
+            });
+    };
+
+    const verifyCode = () => {
+        setShowVerificationError(false);
+        window.confirmationResult
+            .confirm(verificationCode)
+            .then((result) => {
+                // User signed in successfully.
+                const user = result.user;
+                console.log("Code is correct! Logged-in user ID: ", user.uid);
+                navigate("/");
+            })
+            .catch((error) => {
+                // User couldn't sign in (bad verification code?)
+                console.log("Error: ", error);
+                setShowVerificationError(true);
+            })
+            .finally(() => {
+                setIsLoading(false);
+            });
+    };
 
     const handlePhoneNumberChange = (e) => {
         setPhoneNumber(e.target.value.replace(/\D/g, ""));
     };
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        alert("TODO: Logging in with phone number: " + phoneNumber);
+    const handleVerificationCodeChange = (e) => {
+        setVerificationCode(e.target.value);
     };
 
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        setIsLoading(true);
+
+        if (isVerifyingCode) {
+            // Verification code already sent
+            verifyCode();
+        } else {
+            // Send verification code
+            console.log(
+                "Attempting to login in with phone number: " +
+                    countryCode +
+                    phoneNumber
+            );
+
+            generateRecaptchaVerifier();
+            sendVerificationCode();
+        }
+    };
+
+    // Determine formatted phone number as user types
     useEffect(() => {
         setFormattedPhoneNumber(formatPhoneNumber(phoneNumber));
     }, [phoneNumber]);
 
     return (
         <div className="login-container">
-            <form onSubmit={handleSubmit}>
-                <h1>Login or Sign-Up</h1>
+            <form id="login-form" onSubmit={handleSubmit}>
+                <h1>Login or Register</h1>
+                <p>Please enter your phone number.</p>
+                <div>
+                    <label
+                        htmlFor="phone-number-input"
+                        className="country-code"
+                    >
+                        {countryCode}
+                    </label>
+                    <input
+                        id="phone-number-input"
+                        type="tel"
+                        value={formattedPhoneNumber || phoneNumber}
+                        onChange={handlePhoneNumberChange}
+                        placeholder="(XXX) XXX-XXXX"
+                        maxLength={14}
+                        disabled={isVerifyingCode}
+                    />
+                </div>
+                {isVerifyingCode && (
+                    <>
+                        <p
+                            className="verification-code-message"
+                            htmlFor="verification-code-input"
+                        >
+                            A 6-digit verification code has been sent to{" "}
+                            {formattedPhoneNumber}.
+                            <br />
+                            Please enter it below.
+                        </p>
+                        <input
+                            id="verification-code-input"
+                            type="text"
+                            placeholder="XXXXXX"
+                            maxLength={6}
+                            value={verificationCode}
+                            onChange={handleVerificationCodeChange}
+                        />
+                        {showVerificiationError && (
+                            <p className="verification-error">
+                                Incorrect verification code. Please try again.
+                            </p>
+                        )}
+                    </>
+                )}
+                <div id="recaptcha-container" />
                 <input
-                    id="phone-number-input"
-                    type="tel"
-                    value={formattedPhoneNumber || phoneNumber}
-                    onChange={handlePhoneNumberChange}
-                    placeholder="(123) 456-7890"
-                    maxLength={14}
-                />
-                <input
+                    id="submit-button"
                     type="submit"
-                    disabled={phoneNumber.length !== 10}
-                    value="Continue"
+                    disabled={phoneNumber.length !== 10 || isLoading}
+                    value={isVerifyingCode ? "Verify Code" : "Send Code"}
                 />
             </form>
         </div>
