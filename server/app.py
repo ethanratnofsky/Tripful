@@ -1,8 +1,11 @@
+from bson import ObjectId
 from flask import Flask, request, json, jsonify
 from pymongo import MongoClient
 import certifi
 from uuid import uuid4
 from datetime import datetime as dt
+from dotenv import load_dotenv, find_dotenv
+import os
 
 # ********************************
 #           APP CONFIG
@@ -12,7 +15,11 @@ app = Flask(__name__)
 # ********************************
 #         MONGODB CONFIG
 # ********************************
-cluster = MongoClient("mongodb+srv://admin:ethansq@tripfulcluster.govpqrv.mongodb.net/?retryWrites=true&w=majority", tlsCAFile=certifi.where())
+load_dotenv(find_dotenv())
+
+password = os.environ.get("MONGODB_PWD")
+
+cluster = MongoClient(f"mongodb+srv://admin:{password}@tripfulcluster.govpqrv.mongodb.net/?retryWrites=true&w=majority", tlsCAFile=certifi.where())
 db = cluster["tripful"]
 
 # ********************************
@@ -27,14 +34,24 @@ db = cluster["tripful"]
 # Get all of the trips (for admin view)
 @app.route("/api/read-trips", methods=["GET"])
 def read_trips():
+    trips = []
     trip_info = db["trips"].find()
-    trip_info_id = str(trip_info["Object_id"])
-    return [*db["trips"].find()]
+    for trip in list(trip_info):
+        trip["_id"] = str(trip["_id"])
+        trips.append(trip)
+
+    return trips
 
 # Get all of the ideas (for admin view)
 @app.route("/api/read-ideas", methods=["GET"])
 def read_ideas():
-    return [*db["ideas"].find()]
+    ideas = []
+    idea_info = db["ideas"].find()
+    for idea in list(idea_info):
+        idea["_id"] = str(idea["_id"])
+        ideas.append(idea)
+
+    return ideas
 
 # Post request to create a trip
 @app.route("/api/create-trip", methods=["POST"])
@@ -44,11 +61,11 @@ def create_trip():
     # lookup mongo user info from firebase user info
 
     trip = {
-        "_id": uuid4().hex,
         # "created_by": "blahblah"
         "name": request_data["name"],
-        "start_date": request_data["start_date"],
-        "end_date": request_data["end_date"],
+        "start_date": str(request_data["start_date"]),
+        "end_date": str(request_data["end_date"]),
+        "location": request_data["location"],
         "guests": [],
         "ideas": []
     }
@@ -65,10 +82,9 @@ def create_idea():
     # lookup mongo user info from firebase user info
 
     idea = {
-        "_id": uuid4().hex,
         # "created_by": "blahblah"
         "title": request_data["title"],
-        "author": request_data["author"],
+        # "author": request_data["author"],
         "created_at": dt.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC"),
         "last_edited": dt.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC"),
         "content": request_data["content"],
@@ -102,12 +118,12 @@ def read_user_trips():
     return trips
 
 # Put request to update a trip
-@app.route("api/update-trip", methods=["PUT"])
+@app.route("/api/update-trip", methods=["PUT"])
 def update_trip():
     request_data = json.loads(request.data)
+    id = str(request_data["_id"])
 
     trip = {
-        "_id": request_data["_id"],
         # "created_by": "blahblah"
         "name": request_data["name"],
         "start_date": request_data["start_date"],
@@ -116,7 +132,7 @@ def update_trip():
         "ideas": request_data["ideas"]
     }
     
-    db["trips"].replace_one({"_id": id}, trip)
+    db["trips"].replace_one({"_id": ObjectId(id)}, trip)
 
     return "SUCCESS: Trip updated"
 
@@ -124,6 +140,7 @@ def update_trip():
 @app.route("/api/update-idea", methods=["PUT"])
 def update_idea():
     request_data = json.loads(request.data)
+    id = str(request_data["_id"])
 
     idea = {
         "_id": request_data["_id"],
@@ -137,7 +154,7 @@ def update_idea():
         "downvotes": request_data["downvotes"]
     }
 
-    db["ideas"].replace_one({"_id": id}, idea)
+    db["ideas"].replace_one({"_id": ObjectId(id)}, idea)
 
     return "SUCCESS: Idea updated"
 
@@ -145,15 +162,16 @@ def update_idea():
 @app.route("/api/delete-trip", methods=["DELETE"])
 def delete_trip():
     request_data = json.loads(request.data)
-    db["trips"].delete_one({"_id": request_data["_id"]})
+    db["trips"].delete_one({"_id": ObjectId(str(request_data["_id"]))})
 
     return "SUCCESS: Deleted trip"
+
 
 # Delete request for idea
 @app.route("/api/delete-idea", methods=["DELETE"])
 def delete_idea():
     request_data = json.loads(request.data)
-    db["ideas"].delete_one({"_id": request_data["_id"]})
+    db["ideas"].delete_one({"_id": ObjectId(str(request_data["_id"]))})
 
     return "SUCCESS: Deleted idea"
 
