@@ -4,20 +4,22 @@ from pymongo import MongoClient
 import certifi
 from uuid import uuid4
 from datetime import datetime as dt
-from dotenv import load_dotenv, find_dotenv
+# from dotenv import load_dotenv, find_dotenv
 import os
+from flask_cors import CORS
 
 # ********************************
 #           APP CONFIG
 # ********************************
 app = Flask(__name__)
+CORS(app)
 
 # ********************************
 #         MONGODB CONFIG
 # ********************************
-load_dotenv(find_dotenv())
-
-password = os.environ.get("MONGODB_PWD")
+# load_dotenv(find_dotenv())
+# password = os.environ.get("MONGODB_PWD")
+password = "ethansq"
 
 cluster = MongoClient(f"mongodb+srv://admin:{password}@tripfulcluster.govpqrv.mongodb.net/?retryWrites=true&w=majority", tlsCAFile=certifi.where())
 db = cluster["tripful"]
@@ -53,6 +55,17 @@ def read_ideas():
 
     return ideas
 
+# Get all of the ideas (for admin view)
+@app.route("/api/read-users", methods=["GET"])
+def read_users():
+    users = []
+    user_info = db["users"].find()
+    for user in list(user_info):
+        user["_id"] = str(user["_id"])
+        users.append(user)
+
+    return users
+
 # Post request to create a trip
 @app.route("/api/create-trip", methods=["POST"])
 def create_trip():
@@ -73,6 +86,20 @@ def create_trip():
     db["trips"].insert_one(trip)
 
     return "SUCCESS: Trip created"
+
+@app.route("/api/create-user", methods=["POST"])
+def create_user():
+    request_data = json.loads(request.data)
+
+    user = {
+        "_id": request_data["_id"],
+        # "name": request_data["name"],
+        "phone_number": request_data["phone_number"],
+    }
+
+    db["users"].insert_one(user)
+
+    return "SUCCESS: User created"
 
 # Post request to create a idea
 @app.route("/api/create-idea", methods=["POST"])

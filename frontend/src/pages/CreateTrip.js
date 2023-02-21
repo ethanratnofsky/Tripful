@@ -1,10 +1,8 @@
 import React from "react";
-import { ReactMultiEmail, isEmail } from "react-multi-email";
-
 import "./CreateTrip.css";
 import TestImg from "../assets/test.png";
 import { useState } from "react";
-import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const CreateTrip = () => {
     const [trip_name, setName] = useState("");
@@ -12,6 +10,8 @@ const CreateTrip = () => {
     const [end_date, setEndDate] = useState(new Date());
     const [location, setLocation] = useState("");
     const [emails, setEmails] = useState([]);
+
+    const navigate = useNavigate();
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -30,6 +30,7 @@ const CreateTrip = () => {
         })
             .then((response) => {
                 response.json();
+                navigate("/");
             })
             .then((message) => {
                 console.log(message);
@@ -44,7 +45,7 @@ const CreateTrip = () => {
     return (
         <div className="trip-form-container">
             <form className="trip-info" onSubmit={handleSubmit}>
-                <label for="trip-name">Trip name:</label>
+                <label htmlFor="trip-name">Trip name:</label>
                 <br />
                 <input
                     type="text"
@@ -54,7 +55,7 @@ const CreateTrip = () => {
                     onInput={(e) => setName(e.target.value)}
                 ></input>
                 <br />
-                <label for="start-date">Start date:</label>
+                <label htmlFor="start-date">Start date:</label>
                 <br></br>
                 <input
                     type="datetime-local"
@@ -63,7 +64,7 @@ const CreateTrip = () => {
                     onInput={(e) => setStartDate(e.target.value)}
                 ></input>
                 <br />
-                <label for="end-date">End date:</label>
+                <label htmlFor="end-date">End date:</label>
                 <br></br>
                 <input
                     type="datetime-local"
@@ -72,7 +73,7 @@ const CreateTrip = () => {
                     onInput={(e) => setEndDate(e.target.value)}
                 ></input>
                 <br />
-                <label for="location">Location:</label>
+                <label htmlFor="location">Location:</label>
                 <br></br>
                 <input
                     type="text"
@@ -82,7 +83,7 @@ const CreateTrip = () => {
                     onInput={(e) => setLocation(e.target.value)}
                 ></input>
                 <br></br>
-                {/* <label for="invite">Invite:</label>
+                {/* <label htmlFor="invite">Invite:</label>
                 <br></br>
                 <input
                     type="email"
@@ -91,8 +92,9 @@ const CreateTrip = () => {
                     value={emails}
                     onInput={(e) => setEmails(e.target.value)}
                 ></input> */}
+
                 <br></br>
-                <label for="submit">Submit</label>
+                <label htmlFor="submit">Submit</label>
                 <br></br>
                 <input type="submit" value="Submit" />
             </form>
