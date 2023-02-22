@@ -5,6 +5,7 @@ import "./TripsDashboard.css";
 
 const TripsDashboard = () => {
     const [trips, setTrips] = useState([])
+    const [displayedTrip, setDisplayedTrip] = useState(null)
 
     function getLatestTrips() {
         fetch('http://127.0.0.1:5000/api/read-trips').then(response => {
@@ -15,7 +16,9 @@ const TripsDashboard = () => {
     }
 
     // update trips when page first loads
-    useEffect(() => getLatestTrips(), [])
+    useEffect(() => {
+        getLatestTrips()
+    }, [])
 
     const handleFilterUpcoming = () => {
         alert("TODO: Filtering upcoming trips...");
@@ -33,16 +36,16 @@ const TripsDashboard = () => {
                 <button onClick={handleFilterPast}>Past Trips</button>
             </div>
             <div className="trips-container">
-                <Link to="/create-trip" className="create-trip-card">
+                <Link to="/create-trip" className="trip-card">
                     +
                 </Link>
 
                 {/* render trips */}
-                {trips.map((trip) => {
+                {/* {trips.map((trip) => {
                     return (
                         <h1 key={trip["_id"]}>{trip["location"]}</h1>
                     )
-                })}
+                })} */}
                 {trips.map((trip) => (
                     <span
                         onClick={() => setDisplayedTrip(trip)}
@@ -53,6 +56,20 @@ const TripsDashboard = () => {
                     </span>
                 ))}
             </div>
+            {displayedTrip !== null && (
+                <>
+                    <div className="overlay" />
+                    <div className="trip-details-container">
+                        <h2>Name: {displayedTrip.name}</h2>
+                        <p>Start: {displayedTrip.start_date}</p>
+                        <p>End: {displayedTrip.end_date}</p>
+                        <p>Location: {displayedTrip.location}</p>
+                        <button onClick={() => setDisplayedTrip(null)}>
+                            Back
+                        </button>
+                    </div>
+                </>
+            )}
         </div>
     );
 };

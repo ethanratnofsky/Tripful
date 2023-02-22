@@ -4,9 +4,11 @@
 
 .trips-dashboard-container .trips-container {
     margin-top: 40px;
+    display: flex;
+    flex-wrap: wrap;
 }
 
-.trips-dashboard-container .create-trip-card {
+.trips-dashboard-container .trip-card {
     height: 200px;
     width: 200px;
     background: #d5d5d5;
@@ -17,4 +19,33 @@
     border-radius: 5px;
     text-decoration: none;
     color: inherit;
+    margin: 10px;
+}
+
+.trips-dashboard-container .overlay {
+    background-color: black;
+    opacity: 0.1;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.trips-dashboard-container .trip-details-container {
+    background: white;
+    width: 400px;
+    height: 400px;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
