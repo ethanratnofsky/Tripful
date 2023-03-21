@@ -80,6 +80,19 @@ const Login = () => {
                 const user = result.user;
                 console.log("Code is correct! Logged-in user ID: ", user.uid);
                 navigate("/");
+                fetch("http://127.0.0.1:5000/api/create-user", {
+                    method: "POST",
+                    body: JSON.stringify({
+                        _id: user.uid,
+                        phone_number: user.phoneNumber,
+                    }),
+                    header: {
+                        "Content-type": "application/json; charset=UTF-8",
+                    },
+                }).then((response) => {
+                    response.json();
+                });
+                // make post request to create user
             })
             .catch((error) => {
                 // User couldn't sign in (bad verification code?)
