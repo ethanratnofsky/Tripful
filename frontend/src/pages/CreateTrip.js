@@ -1,5 +1,4 @@
 import React from "react";
-import { ReactMultiEmail, isEmail } from "react-multi-email";
 
 import "./CreateTrip.css";
 import TestImg from "../assets/test.png";
@@ -92,7 +91,7 @@ const CreateTrip = () => {
                     onInput={(e) => setEmails(e.target.value)}
                 ></input> */}
                 <br></br>
-                <label for="submit">Submit</label>
+                {/* <label for="submit">Submit</label> */}
                 <br></br>
                 <input type="submit" value="Submit" />
             </form>
