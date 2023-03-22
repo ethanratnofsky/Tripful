@@ -12,7 +12,7 @@ const Trip = () => {
     const fetchTrip = async (tripId) => {
         // TODO: use endpoint to fetch with tripId
         // const response = await fetch(
-        //     `${"http://localhost:5000/"}/api/read-trip?trip_id=${tripId}`
+        //     `${"http://localhost:5000"}/api/read-trip?trip_id=${tripId}`
         // );
         // const data = await response.json();
         // setTrip(data);
@@ -42,12 +42,18 @@ const Trip = () => {
 
     return (
         <div className="trip-container">
-            <Link to=".." className="back-button">Back to Trips</Link>
+            <Link to=".." className="back-button">
+                Back to Trips
+            </Link>
             {trip && (
                 <div className="trip-info">
                     <h1 className="trip-name">{trip.name}</h1>
-                    <p className="trip-start-date">Start: {new Date(trip.start_date).toLocaleString()}</p>
-                    <p className="trip-end-date">End: {new Date(trip.end_date).toLocaleString()}</p>
+                    <p className="trip-start-date">
+                        Start: {new Date(trip.start_date).toLocaleString()}
+                    </p>
+                    <p className="trip-end-date">
+                        End: {new Date(trip.end_date).toLocaleString()}
+                    </p>
                     <p className="trip-location">Location: {trip.location}</p>
                 </div>
             )}
