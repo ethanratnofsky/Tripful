@@ -16,6 +16,7 @@ import CreateTrip from "./pages/CreateTrip";
 import Profile from "./pages/Profile";
 import Trip from "./pages/Trip";
 
+import { AuthProvider } from './contexts/AuthContext';
 import ProtectedRoutes from "./utils/ProtectedRoutes";
 
 const Root = () => {
@@ -44,7 +45,11 @@ const router = createBrowserRouter(
 
 // The main React App component
 const App = () => {
-    return <RouterProvider router={router} />;
+    return (
+        <AuthProvider>
+            <RouterProvider router={router} />
+        </AuthProvider>
+    );
 };
 
 export default App;
