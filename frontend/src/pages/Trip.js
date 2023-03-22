@@ -3,11 +3,23 @@ import { Link, useParams } from "react-router-dom";
 
 import "./Trip.css";
 
+const TEST_IDEAS = [
+    {
+        _id: 1,
+        title: "Test Idea 1",
+        content: "This is a test idea",
+        author: "Test Author 1",
+        createdAt: "2021-03-01T00:00:00.000Z",
+        upvotes: [],
+        downvotes: [],
+    },
+];
+
 const Trip = () => {
     const { tripId } = useParams();
 
     const [trip, setTrip] = useState();
-    const [ideas, setIdeas] = useState([]);
+    const [ideas, setIdeas] = useState(TEST_IDEAS); // TODO: replace with []
 
     const fetchTrip = async (tripId) => {
         // TODO: use endpoint to fetch with tripId
@@ -40,6 +52,14 @@ const Trip = () => {
         // TODO: Fetch ideas for this trip
     }, [trip]);
 
+    const handleUpvote = () => {
+        // TODO: add my user id to the upvotes array
+    };
+
+    const handleDownvote = () => {
+        // TODO: add my user id to the downvotes array
+    };
+
     return (
         <div className="trip-container">
             <Link to=".." className="back-button">
@@ -55,6 +75,41 @@ const Trip = () => {
                         End: {new Date(trip.end_date).toLocaleString()}
                     </p>
                     <p className="trip-location">Location: {trip.location}</p>
+                </div>
+            )}
+            <h2>Idea Board</h2>
+            {ideas && (
+                <div className="ideas-board">
+                    <ul>
+                        {ideas.map((idea, index) => (
+                            <li key={index}>
+                                <div className="idea">
+                                    <p className="idea-title">{idea.title}</p>
+                                    <p className="idea-author">
+                                        by {idea.author}
+                                    </p>
+                                    <p className="idea-content">
+                                        {idea.content}
+                                    </p>
+                                    <p className="idea-date">
+                                        {new Date(
+                                            idea.createdAt
+                                        ).toLocaleString()}
+                                    </p>
+                                    <div className="vote-container">
+                                        <label>Upvotes</label>
+                                        <button onClick={handleUpvote}>
+                                            {idea.upvotes.length}
+                                        </button>
+                                        <label>Downvotes</label>
+                                        <button onClick={handleDownvote}>
+                                            {idea.downvotes.length}
+                                        </button>
+                                    </div>
+                                </div>
+                            </li>
+                        ))}
+                    </ul>
                 </div>
             )}
         </div>
