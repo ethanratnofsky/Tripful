@@ -140,7 +140,7 @@ const Login = () => {
             setNumberExists(false);
         }
 
-        if (!isVerifyingCode) {
+        if (!isVerifyingCode && !numberExists) {
             users.map((user) => {
                 if (user.phone_number === countryCode + phoneNumber) {
                     setNumberExists(true);

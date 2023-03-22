@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { onAuthStateChanged, signOut } from "firebase/auth";
+import { signOut } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 
-// import { auth } from "../../firebase.config";
+import { auth } from "../../firebase.config";
 import { useAuth } from "../contexts/AuthContext";
 
 import "./Profile.css";
@@ -13,6 +13,9 @@ const Profile = () => {
     const navigate = useNavigate();
     const { currentUser } = useAuth();
 
+    const [user, setUser] = useState();
+    const [phoneNumber, setPhoneNumber] = useState("XXX-XXX-XXXX");
+
     const fetchUser = async (userId) => {
         // TODO: use endpoint to fetch with tripId
         const response = await fetch(
@@ -20,6 +23,7 @@ const Profile = () => {
         );
         const data = await response.json();
         setUser(data);
+        console.log(data);
     };
 
     const handleEditProfile = () => {
@@ -37,12 +41,16 @@ const Profile = () => {
             });
     };
 
+    useEffect(() => {
+        fetchUser(currentUser.uid);
+    }, []);
+
     return (
         <div className="profile-container">
             <div className="header">
                 <img className="user-profile" src={TestImg} alt="User" />
                 <div className="user-info">
-                    <h1>Hey, {currentUser.uid}!</h1>
+                    <h1>Hey, {user?.name}!</h1>
                     <p>
                         <strong>Phone Number:</strong> {currentUser.phoneNumber}
                     </p>
