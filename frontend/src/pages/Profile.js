@@ -26,7 +26,7 @@ const Profile = () => {
     const fetchUser = async (userId) => {
         // TODO: use endpoint to fetch with tripId
         const response = await fetch(
-            `${"http://localhost:5000"}/api/read-user?user_id=${userId}`
+            `${"http://127.0.0.1:5000"}/api/read-user?user_id=${userId}`
         );
         const data = await response.json();
         setUser(data);

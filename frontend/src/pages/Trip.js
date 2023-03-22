@@ -24,7 +24,7 @@ const Trip = () => {
     const fetchTrip = async (tripId) => {
         // TODO: use endpoint to fetch with tripId
         const response = await fetch(
-            `${"http://localhost:5000"}/api/read-trip?trip_id=${tripId}`
+            `${"http://127.0.0.1:5000"}/api/read-trip?trip_id=${tripId}`
         );
         const data = await response.json();
         setTrip(data);
@@ -32,17 +32,11 @@ const Trip = () => {
 
     const fetchIdeas = async (tripId) => {
         const newResponse = await fetch(
-            `${"http://localhost:5000"}/api/read-trip-ideas?trip_id=${tripId}`
+            `${"http://127.0.0.1:5000"}/api/read-trip-ideas?trip_id=${tripId}`
         );
         const ideaData = await newResponse.json();
         setIdeas(ideaData);
-    };
-
-    const updateUpvotes = async (ideaId) => {
-        // const response = await fetch(
-        //     `${"http://localhost:5000"}/api/update-idea-upvotes?ideaId=${ideaId}`
-        // );
-        // const data = await response.json();
+        console.log(ideaData);
     };
 
     useEffect(() => {
@@ -57,7 +51,11 @@ const Trip = () => {
 
     const handleUpvote = (ideaId) => {
         // TODO: add my user id to the upvotes array
-        updateUpvotes(ideaId);
+        // const response = await fetch(
+        //     `${"http://127.0.0.1:5000"}/api/update-idea-upvotes?ideaId=${ideaId}`
+        // );
+        // const data = await response.json();
+        // updateUpvotes(ideaId);
     };
 
     const handleDownvote = () => {
@@ -97,7 +95,7 @@ const Trip = () => {
                                     </p>
                                     <p className="idea-date">
                                         {new Date(
-                                            idea.createdAt
+                                            idea.created_at
                                         ).toLocaleString()}
                                     </p>
                                     <div className="vote-container">

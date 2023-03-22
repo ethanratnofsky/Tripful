@@ -3,7 +3,7 @@ from flask import Flask, request, json, jsonify
 from pymongo import MongoClient
 import certifi
 from uuid import uuid4
-from datetime import datetime as dt
+from datetime import datetime
 # from dotenv import load_dotenv, find_dotenv
 import os
 from flask_cors import CORS
@@ -21,7 +21,8 @@ CORS(app)
 # password = os.environ.get("MONGODB_PWD")
 password = "ethansq"
 
-cluster = MongoClient(f"mongodb+srv://admin:{password}@tripfulcluster.govpqrv.mongodb.net/?retryWrites=true&w=majority", tlsCAFile=certifi.where())
+cluster = MongoClient(
+    f"mongodb+srv://admin:{password}@tripfulcluster.govpqrv.mongodb.net/?retryWrites=true&w=majority", tlsCAFile=certifi.where())
 db = cluster["tripful"]
 
 # ********************************
@@ -34,6 +35,8 @@ db = cluster["tripful"]
 #     return {"names": ["Nick Jonas", "Joe Jonas"]}
 
 # Get all of the trips (for admin view)
+
+
 @app.route("/api/read-trips", methods=["GET"])
 def read_trips():
     trips = []
@@ -45,6 +48,8 @@ def read_trips():
     return trips
 
 # Get all of the ideas (for admin view)
+
+
 @app.route("/api/read-ideas", methods=["GET"])
 def read_ideas():
     ideas = []
@@ -56,6 +61,8 @@ def read_ideas():
     return ideas
 
 # Get all users
+
+
 @app.route("/api/read-users", methods=["GET"])
 def read_users():
     users = []
@@ -67,18 +74,22 @@ def read_users():
     return users
 
 # Get single user
+
+
 @app.route("/api/read-user", methods=["GET"])
 def read_user():
     args = request.args
     args_dict = args.to_dict()
     user_id = args_dict["user_id"]
 
-    user = db["users"].find_one({"_id":user_id})
+    user = db["users"].find_one({"_id": user_id})
     print(user)
 
     return user
 
 # Post request to create a trip
+
+
 @app.route("/api/create-trip", methods=["POST"])
 def create_trip():
     request_data = json.loads(request.data)
@@ -99,6 +110,7 @@ def create_trip():
 
     return "SUCCESS: Trip created"
 
+
 @app.route("/api/create-user", methods=["POST"])
 def create_user():
     request_data = json.loads(request.data)
@@ -114,6 +126,8 @@ def create_user():
     return "SUCCESS: User created"
 
 # Post request to create a idea
+
+
 @app.route("/api/create-idea", methods=["POST"])
 def create_idea():
     request_data = json.loads(request.data)
@@ -124,8 +138,8 @@ def create_idea():
         "created_by": request_data["createdBy"],
         "title": request_data["title"],
         "associated_trip": request_data["associatedTrip"],
-        "created_at": dt.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC"),
-        "last_edited": dt.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC"),
+        "created_at": str(datetime.now().isoformat()),
+        "last_edited": str(datetime.now().isoformat()),
         "content": request_data["content"],
         "upvotes": [],
         "downvotes": []
@@ -136,6 +150,8 @@ def create_idea():
     return "SUCCESS: Idea created"
 
 # Get request to read ideas from a specific trip
+
+
 @app.route("/api/read-trip-ideas", methods=["GET"])
 def read_trip_ideas():
     args = request.args
@@ -152,6 +168,8 @@ def read_trip_ideas():
     return trip_ideas_list
 
 # Get request to get a specific trip
+
+
 @app.route("/api/read-trip", methods=["GET"])
 def read_trip():
     args = request.args
@@ -164,6 +182,8 @@ def read_trip():
     return trip
 
 # Get request to read trips for a specific user
+
+
 @app.route("/api/read-user-trips", methods=["GET"])
 def read_user_trips():
     request_data = json.loads(request.data)
@@ -172,6 +192,8 @@ def read_user_trips():
     return trips
 
 # Put request to update a trip
+
+
 @app.route("/api/update-trip", methods=["PUT"])
 def update_trip():
     request_data = json.loads(request.data)
@@ -185,12 +207,14 @@ def update_trip():
         "guests": request_data["guests"],
         "ideas": request_data["ideas"]
     }
-    
+
     db["trips"].replace_one({"_id": ObjectId(id)}, trip)
 
     return "SUCCESS: Trip updated"
 
 # Put request to update  idea
+
+
 @app.route("/api/update-idea", methods=["PUT"])
 def update_idea():
     request_data = json.loads(request.data)
@@ -202,7 +226,7 @@ def update_idea():
         "title": request_data["title"],
         "author": request_data["author"],
         "created_at": request_data["created_at"],
-        "last_edited": dt.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC"),
+        "last_edited": str(datetime.now().isoformat()),
         "content": request_data["content"],
         "upvotes": request_data["upvotes"],
         "downvotes": request_data["downvotes"]
@@ -213,6 +237,8 @@ def update_idea():
     return "SUCCESS: Idea updated"
 
 # Put request to update  upvotes
+
+
 @app.route("/api/update-idea-upvotes", methods=["PUT"])
 def update_idea_upvotes():
     args = request.args
@@ -223,11 +249,11 @@ def update_idea_upvotes():
 
     idea = {
         "_id": idea["_id"],
-        "created_by": "Jon Doe", # TO DO CHANGE THIS TO NAME
+        "created_by": "Jon Doe",  # TO DO CHANGE THIS TO NAME
         "title": idea["title"],
         "associated_trip": idea["associated_trip"],
         "created_at": idea["created_at"],
-        "last_edited": dt.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC"),
+        "last_edited": str(datetime.now().isoformat()),
         "content": idea["content"],
         "upvotes": idea["upvotes"].append(idea_id),
         "downvotes": idea["downvotes"]
@@ -238,6 +264,8 @@ def update_idea_upvotes():
     return "SUCCESS: Idea updated"
 
 # Put request to update  downvotes
+
+
 @app.route("/api/update-idea-downvotes", methods=["PUT"])
 def update_idea_downvotes():
     args = request.args
@@ -248,11 +276,11 @@ def update_idea_downvotes():
 
     idea = {
         "_id": idea["_id"],
-        "created_by": "Jon Doe", # TO DO CHANGE THIS TO NAME
+        "created_by": "Jon Doe",  # TO DO CHANGE THIS TO NAME
         "title": idea["title"],
         "associated_trip": idea["associated_trip"],
         "created_at": idea["created_at"],
-        "last_edited": dt.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC"),
+        "last_edited": str(datetime.now().isoformat()),
         "content": idea["content"],
         "upvotes": idea["upvotes"],
         "downvotes": idea["downvotes"].append(idea_id)
@@ -263,6 +291,8 @@ def update_idea_downvotes():
     return "SUCCESS: Idea updated"
 
 # Delete request for a trip
+
+
 @app.route("/api/delete-trip", methods=["DELETE"])
 def delete_trip():
     request_data = json.loads(request.data)
@@ -278,6 +308,7 @@ def delete_idea():
     db["ideas"].delete_one({"_id": ObjectId(str(request_data["_id"]))})
 
     return "SUCCESS: Deleted idea"
+
 
 if __name__ == "__main__":
     app.run(debug=True)

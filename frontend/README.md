@@ -26,7 +26,7 @@ This repository contains the source code for the frontend of the Tripful web app
     ```bash
     npm start
     ```
-5. Navigate to [http://localhost:8080](http://localhost:8080) in your browser.
+5. Navigate to [http://127.0.0.1:8080](http://127.0.0.1:8080) in your browser.
 
 ## Development Notes
 
