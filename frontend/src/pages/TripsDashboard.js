@@ -10,7 +10,7 @@ const TripsDashboard = () => {
 
     const [filter, setFilter] = useState("all");
 
-    const getLatestTrips = () => {
+    const getTrips = () => {
         fetch("http://127.0.0.1:5000/api/read-trips")
             .then((response) => {
                 if (response.ok) {
@@ -22,7 +22,7 @@ const TripsDashboard = () => {
 
     // update trips when page first loads
     useEffect(() => {
-        getLatestTrips();
+        getTrips();
     }, []);
 
     useEffect(() => {
@@ -82,13 +82,13 @@ const TripsDashboard = () => {
 
                 {/* render trips */}
                 {displayedTrips.map((trip) => (
-                    <span
-                        onClick={() => setDisplayedTrip(trip)}
+                    <Link
+                        to={`/trip/${trip._id}`}
                         className="trip-card"
-                        key={trip["_id"]}
+                        key={trip._id}
                     >
                         <h2>{trip["name"]}</h2>
-                    </span>
+                    </Link>
                 ))}
             </div>
             {displayedTrip !== null && (
