@@ -3,18 +3,6 @@ import { Link, useParams, useNavigate } from "react-router-dom";
 
 import "./Trip.css";
 
-const TEST_IDEAS = [
-    {
-        _id: 1,
-        title: "Test Idea 1",
-        content: "This is a test idea",
-        author: "Test Author 1",
-        createdAt: "2021-03-01T00:00:00.000Z",
-        upvotes: [],
-        downvotes: [],
-    },
-];
-
 const Trip = () => {
     const { tripId } = useParams();
 
@@ -38,7 +26,6 @@ const Trip = () => {
         );
         const ideaData = await newResponse.json();
         setIdeas(ideaData);
-        console.log(ideaData);
     };
 
     useEffect(() => {
@@ -53,14 +40,9 @@ const Trip = () => {
 
     const handleUpvote = (ideaId) => {
         // TODO: add my user id to the upvotes array
-        // const response = await fetch(
-        //     `${"http://127.0.0.1:5000"}/api/update-idea-upvotes?ideaId=${ideaId}`
-        // );
-        // const data = await response.json();
-        // updateUpvotes(ideaId);
     };
 
-    const handleDownvote = () => {
+    const handleDownvote = (ideaId) => {
         // TODO: add my user id to the downvotes array
     };
 
@@ -96,41 +78,51 @@ const Trip = () => {
                 </div>
             )}
             <h2>Idea Board</h2>
+            <Link to={`/create-idea/${tripId}`}>Create New Idea</Link>
             {ideas && (
                 <div className="ideas-board">
-                    <ul>
+                    <ul className="ideas-list">
                         {ideas.map((idea, index) => (
-                            <li key={index}>
-                                <div className="idea">
+                            <li key={index} className="idea-container">
+                                <div className="idea-header">
                                     <h3 className="idea-title">{idea.title}</h3>
-                                    <p className="idea-author">
-                                        by {idea.created_by}
-                                    </p>
-                                    <p className="idea-content">
-                                        {idea.content}
-                                    </p>
                                     <p className="idea-date">
                                         {new Date(
                                             idea.created_at
                                         ).toLocaleString()}
                                     </p>
-                                    <div className="vote-container">
-                                        <label>Upvotes</label>
-                                        <button onClick={handleUpvote}>
-                                            {idea.upvotes.length}
+                                </div>
+                                <p className="idea-author">
+                                    by {idea.created_by}
+                                </p>
+                                <p className="idea-content">{idea.content}</p>
+                                <div className="vote-container">
+                                    <label className="upvotes">
+                                        <button
+                                            onClick={() =>
+                                                handleUpvote(idea._id)
+                                            }
+                                        >
+                                            👍
                                         </button>
-                                        <label>Downvotes</label>
-                                        <button onClick={handleDownvote}>
-                                            {idea.downvotes.length}
+                                        {idea.upvotes.length}
+                                    </label>
+                                    <label className="downvotes">
+                                        <button
+                                            onClick={() =>
+                                                handleDownvote(idea._id)
+                                            }
+                                        >
+                                            👎
                                         </button>
-                                    </div>
+                                        {idea.downvotes.length}
+                                    </label>
                                 </div>
                             </li>
                         ))}
                     </ul>
                 </div>
             )}
-            <Link to={`/create-idea/${tripId}`}>Create New Idea</Link>
         </div>
     );
 };
