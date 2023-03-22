@@ -29,6 +29,9 @@ const Login = () => {
     const [isVerifyingCode, setIsVerifyingCode] = useState(false);
     const [showVerificiationError, setShowVerificationError] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const [users, setUsers] = useState([]);
+    const [numberExists, setNumberExists] = useState(true);
+    const [name, setName] = useState([""]);
 
     const navigate = useNavigate();
 
@@ -80,18 +83,21 @@ const Login = () => {
                 const user = result.user;
                 console.log("Code is correct! Logged-in user ID: ", user.uid);
                 navigate("/");
-                fetch("http://127.0.0.1:5000/api/create-user", {
-                    method: "POST",
-                    body: JSON.stringify({
-                        _id: user.uid,
-                        phone_number: user.phoneNumber,
-                    }),
-                    header: {
-                        "Content-type": "application/json; charset=UTF-8",
-                    },
-                }).then((response) => {
-                    response.json();
-                });
+                if (!numberExists) {
+                    fetch("http://127.0.0.1:5000/api/create-user", {
+                        method: "POST",
+                        body: JSON.stringify({
+                            _id: user.uid,
+                            name: name,
+                            phone_number: user.phoneNumber,
+                        }),
+                        header: {
+                            "Content-type": "application/json; charset=UTF-8",
+                        },
+                    }).then((response) => {
+                        response.json();
+                    });
+                }
                 // make post request to create user
             })
             .catch((error) => {
@@ -112,9 +118,37 @@ const Login = () => {
         setVerificationCode(e.target.value);
     };
 
+    const handleNameChange = (e) => {
+        setName(e.target.value);
+    };
+
+    const getLatestUsers = () => {
+        fetch("http://127.0.0.1:5000/api/read-users")
+            .then((response) => {
+                if (response.ok) {
+                    return response.json();
+                }
+            })
+            .then((data) => setUsers(data));
+    };
+
     const handleSubmit = (e) => {
         e.preventDefault();
         setIsLoading(true);
+
+        if (users.length == 0) {
+            setNumberExists(false);
+        }
+
+        if (!isVerifyingCode) {
+            users.map((user) => {
+                if (user.phone_number === countryCode + phoneNumber) {
+                    setNumberExists(true);
+                } else {
+                    setNumberExists(false);
+                }
+            });
+        }
 
         if (isVerifyingCode) {
             // Verification code already sent
@@ -135,6 +169,7 @@ const Login = () => {
     // Determine formatted phone number as user types
     useEffect(() => {
         setFormattedPhoneNumber(formatPhoneNumber(phoneNumber));
+        getLatestUsers();
     }, [phoneNumber]);
 
     return (
@@ -159,6 +194,20 @@ const Login = () => {
                         disabled={isVerifyingCode}
                     />
                 </div>
+                {!numberExists && (
+                    <>
+                        <p className="verification-code-message">
+                            This number has not been registered. Please enter
+                            your name below to register!
+                        </p>
+                        <input
+                            type="text"
+                            placeholder="Enter name..."
+                            value={name}
+                            onChange={handleNameChange}
+                        />
+                    </>
+                )}
                 {isVerifyingCode && (
                     <>
                         <p
