@@ -77,49 +77,67 @@ const Trip = () => {
                     <button onClick={handleDelete}>Delete Trip</button>
                 </div>
             )}
-            <h2>Idea Board</h2>
-            <Link to={`/create-idea/${tripId}`}>Create New Idea</Link>
+            <div className="idea-board-header">
+                <h2>Idea Board</h2>
+                <Link
+                    to={`/create-idea/${tripId}`}
+                    className="create-idea-button"
+                >
+                    + New Idea
+                </Link>
+            </div>
             {ideas && (
                 <div className="ideas-board">
                     <ul className="ideas-list">
-                        {ideas.map((idea, index) => (
-                            <li key={index} className="idea-container">
-                                <div className="idea-header">
-                                    <h3 className="idea-title">{idea.title}</h3>
-                                    <p className="idea-date">
-                                        {new Date(
-                                            idea.created_at
-                                        ).toLocaleString()}
+                        {ideas.length === 0 ? (
+                            <p className="no-ideas-message">
+                                There are no ideas for this trip yet. Get
+                                creative!
+                            </p>
+                        ) : (
+                            ideas.map((idea, index) => (
+                                <li key={index} className="idea-container">
+                                    <div className="idea-header">
+                                        <h3 className="idea-title">
+                                            {idea.title}
+                                        </h3>
+                                        <p className="idea-date">
+                                            {new Date(
+                                                idea.created_at
+                                            ).toLocaleString()}
+                                        </p>
+                                    </div>
+                                    <p className="idea-author">
+                                        by {idea.created_by}
                                     </p>
-                                </div>
-                                <p className="idea-author">
-                                    by {idea.created_by}
-                                </p>
-                                <p className="idea-content">{idea.content}</p>
-                                <div className="vote-container">
-                                    <label className="upvotes">
-                                        <button
-                                            onClick={() =>
-                                                handleUpvote(idea._id)
-                                            }
-                                        >
-                                            👍
-                                        </button>
-                                        {idea.upvotes.length}
-                                    </label>
-                                    <label className="downvotes">
-                                        <button
-                                            onClick={() =>
-                                                handleDownvote(idea._id)
-                                            }
-                                        >
-                                            👎
-                                        </button>
-                                        {idea.downvotes.length}
-                                    </label>
-                                </div>
-                            </li>
-                        ))}
+                                    <p className="idea-content">
+                                        {idea.content}
+                                    </p>
+                                    <div className="vote-container">
+                                        <label className="upvotes">
+                                            <button
+                                                onClick={() =>
+                                                    handleUpvote(idea._id)
+                                                }
+                                            >
+                                                Upvote 👍
+                                            </button>
+                                            {idea.upvotes.length}
+                                        </label>
+                                        <label className="downvotes">
+                                            <button
+                                                onClick={() =>
+                                                    handleDownvote(idea._id)
+                                                }
+                                            >
+                                                Downvote 👎
+                                            </button>
+                                            {idea.downvotes.length}
+                                        </label>
+                                    </div>
+                                </li>
+                            ))
+                        )}
                     </ul>
                 </div>
             )}

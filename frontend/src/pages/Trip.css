@@ -1,6 +1,29 @@
+.idea-board-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+a.create-idea-button {
+    text-decoration: none;
+    color: inherit;
+    border: 1px solid black;
+    padding: 10px 20px;
+    border-radius: 5px;
+}
+
+a.create-idea-button:hover {
+    background-color: #f2f2f2;
+}
+
 .ideas-list {
     list-style: none;
     padding: 0;
+}
+
+.no-ideas-message {
+    text-align: center;
+    margin-top: 20px;
 }
 
 .idea-container {
