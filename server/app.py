@@ -296,7 +296,7 @@ def update_idea_downvotes():
 @app.route("/api/delete-trip", methods=["DELETE"])
 def delete_trip():
     request_data = json.loads(request.data)
-    db["trips"].delete_one({"_id": ObjectId(str(request_data["_id"]))})
+    db["trips"].delete_one({"_id": ObjectId(request_data["id"])})
 
     return "SUCCESS: Deleted trip"
 
@@ -305,7 +305,7 @@ def delete_trip():
 @app.route("/api/delete-idea", methods=["DELETE"])
 def delete_idea():
     request_data = json.loads(request.data)
-    db["ideas"].delete_one({"_id": ObjectId(str(request_data["_id"]))})
+    db["ideas"].delete_one({"_id": ObjectId(request_data["id"])})
 
     return "SUCCESS: Deleted idea"
 

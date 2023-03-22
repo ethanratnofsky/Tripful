@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 
 import "./Trip.css";
 
@@ -17,6 +17,8 @@ const TEST_IDEAS = [
 
 const Trip = () => {
     const { tripId } = useParams();
+
+    const navigate = useNavigate();
 
     const [trip, setTrip] = useState();
     const [ideas, setIdeas] = useState([]); // TODO: replace with []
@@ -62,6 +64,19 @@ const Trip = () => {
         // TODO: add my user id to the downvotes array
     };
 
+    const handleDelete = () => {
+        fetch("http://127.0.0.1:5000/api/delete-trip", {
+            method: "DELETE",
+            body: JSON.stringify({
+                id: tripId,
+            }),
+            header: {
+                "Content-type": "application/json",
+            },
+        });
+        navigate(-1);
+    };
+
     return (
         <div className="trip-container">
             <Link to=".." className="back-button">
@@ -77,6 +92,7 @@ const Trip = () => {
                         End: {new Date(trip.end_date).toLocaleString()}
                     </p>
                     <p className="trip-location">Location: {trip.location}</p>
+                    <button onClick={handleDelete}>Delete Trip</button>
                 </div>
             )}
             <h2>Idea Board</h2>
