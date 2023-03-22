@@ -84,7 +84,7 @@ const Trip = () => {
                         {ideas.map((idea, index) => (
                             <li key={index}>
                                 <div className="idea">
-                                    <p className="idea-title">{idea.title}</p>
+                                    <h3 className="idea-title">{idea.title}</h3>
                                     <p className="idea-author">
                                         by {idea.author}
                                     </p>
