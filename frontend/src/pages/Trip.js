@@ -42,13 +42,13 @@ const Trip = () => {
 
     return (
         <div className="trip-container">
-            <Link to="..">Back to Trips</Link>
+            <Link to=".." className="back-button">Back to Trips</Link>
             {trip && (
                 <div className="trip-info">
-                    <h1>{trip.name}</h1>
-                    <p>Start: {new Date(trip.start_date).toLocaleString()}</p>
-                    <p>End: {new Date(trip.end_date).toLocaleString()}</p>
-                    <p>Location: {trip.location}</p>
+                    <h1 className="trip-name">{trip.name}</h1>
+                    <p className="trip-start-date">Start: {new Date(trip.start_date).toLocaleString()}</p>
+                    <p className="trip-end-date">End: {new Date(trip.end_date).toLocaleString()}</p>
+                    <p className="trip-location">Location: {trip.location}</p>
                 </div>
             )}
         </div>
