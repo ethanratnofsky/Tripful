@@ -52,7 +52,7 @@ const Trip = () => {
         // TODO: add my user id to the upvotes array
     };
 
-    const handleDownvote = () => {
+    const handleDownvote = (ideaId) => {
         // TODO: add my user id to the downvotes array
     };
 
@@ -95,13 +95,21 @@ const Trip = () => {
                                 <div className="vote-container">
                                     <label className="upvotes">
                                         Upvotes
-                                        <button onClick={handleUpvote}>
+                                        <button
+                                            onClick={() =>
+                                                handleUpvote(idea._id)
+                                            }
+                                        >
                                             {idea.upvotes.length}
                                         </button>
                                     </label>
                                     <label className="downvotes">
                                         Downvotes
-                                        <button onClick={handleDownvote}>
+                                        <button
+                                            onClick={() =>
+                                                handleDownvote(idea._id)
+                                            }
+                                        >
                                             {idea.downvotes.length}
                                         </button>
                                     </label>
