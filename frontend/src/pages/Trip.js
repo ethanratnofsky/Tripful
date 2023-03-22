@@ -66,7 +66,15 @@ const Trip = () => {
             </Link>
             {trip && (
                 <div className="trip-info">
-                    <h1 className="trip-name">{trip.name}</h1>
+                    <div className="trip-header">
+                        <h1 className="trip-name">{trip.name}</h1>
+                        <button
+                            onClick={handleDelete}
+                            className="delete-trip-button"
+                        >
+                            🗑️ Delete Trip
+                        </button>
+                    </div>
                     <p className="trip-start-date">
                         Start: {new Date(trip.start_date).toLocaleString()}
                     </p>
@@ -74,7 +82,6 @@ const Trip = () => {
                         End: {new Date(trip.end_date).toLocaleString()}
                     </p>
                     <p className="trip-location">Location: {trip.location}</p>
-                    <button onClick={handleDelete}>Delete Trip</button>
                 </div>
             )}
             <div className="idea-board-header">
