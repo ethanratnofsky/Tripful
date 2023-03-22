@@ -14,7 +14,11 @@ import Login from "./pages/Login";
 import TripsDashboard from "./pages/TripsDashboard";
 import CreateTrip from "./pages/CreateTrip";
 import Profile from "./pages/Profile";
+<<<<<<< HEAD
 import IdeaBoard from "./pages/IdeaBoard";
+=======
+import Trip from "./pages/Trip";
+>>>>>>> main
 
 import ProtectedRoutes from "./utils/ProtectedRoutes";
 
@@ -37,6 +41,7 @@ const router = createBrowserRouter(
                 <Route path="create-trip" element={<CreateTrip />} />
                 <Route path="idea-board" element={<IdeaBoard />} />
                 <Route path="profile" element={<Profile />} />
+                <Route path="trip/:tripId" element={<Trip />} />
             </Route>
         </Route>
     )
