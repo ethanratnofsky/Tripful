@@ -4,21 +4,23 @@ import { Link } from "react-router-dom";
 import "./TripsDashboard.css";
 
 const TripsDashboard = () => {
-    const [trips, setTrips] = useState([])
-    const [displayedTrip, setDisplayedTrip] = useState(null)
+    const [trips, setTrips] = useState([]);
+    const [displayedTrip, setDisplayedTrip] = useState(null);
 
     function getLatestTrips() {
-        fetch('http://127.0.0.1:5000/api/read-trips').then(response => {
-            if (response.ok) {
-                return response.json()
-            }
-        }).then(data => setTrips(data))
+        fetch("http://127.0.0.1:5000/api/read-trips")
+            .then((response) => {
+                if (response.ok) {
+                    return response.json();
+                }
+            })
+            .then((data) => setTrips(data));
     }
 
     // update trips when page first loads
     useEffect(() => {
-        getLatestTrips()
-    }, [])
+        getLatestTrips();
+    }, []);
 
     const handleFilterUpcoming = () => {
         alert("TODO: Filtering upcoming trips...");
@@ -64,6 +66,8 @@ const TripsDashboard = () => {
                         <p>Start: {displayedTrip.start_date}</p>
                         <p>End: {displayedTrip.end_date}</p>
                         <p>Location: {displayedTrip.location}</p>
+                        <Link to="/idea-board">Go to Idea Board</Link>
+                        <br></br>
                         <button onClick={() => setDisplayedTrip(null)}>
                             Back
                         </button>

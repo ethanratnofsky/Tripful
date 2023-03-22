@@ -93,7 +93,7 @@ def create_user():
 
     user = {
         "_id": request_data["_id"],
-        # "name": request_data["name"],
+        "name": request_data["name"],
         "phone_number": request_data["phone_number"],
     }
 
@@ -135,6 +135,14 @@ def read_trip_ideas():
         trip_ideas.append(db["ideas"].find_one({"_id": id}))
 
     return trip_ideas
+
+# Get request to read ideas from a specific trip
+@app.route("/api/read-trip", methods=["GET"])
+def read_trip():
+    request_data = json.loads(request.data)
+    trip = db["trips"].find_one({"_id": request_data["_id"]})
+
+    return trip
 
 # Get request to read trips for a specific user
 @app.route("/api/read-user-trips", methods=["GET"])
