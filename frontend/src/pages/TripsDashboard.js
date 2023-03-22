@@ -107,6 +107,8 @@ const TripsDashboard = () => {
                             {new Date(displayedTrip.end_date).toLocaleString()}
                         </p>
                         <p>Location: {displayedTrip.location}</p>
+                        <Link to="/idea-board">Go to Idea Board</Link>
+                        <br></br>
                         <button onClick={() => setDisplayedTrip(null)}>
                             Back
                         </button>
