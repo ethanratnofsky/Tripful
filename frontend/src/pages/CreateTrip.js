@@ -10,6 +10,7 @@ const CreateTrip = () => {
     const [end_date, setEndDate] = useState(new Date());
     const [location, setLocation] = useState("");
     const [emails, setEmails] = useState([]);
+    const [tripImage, setTripImage] = useState("");
 
     const navigate = useNavigate();
 
@@ -40,6 +41,14 @@ const CreateTrip = () => {
                 setLocation("");
                 setEmails([]);
             });
+    };
+
+    const handleFileChange = (e) => {
+        e.preventDefault();
+    };
+
+    const handleFileUpload = (e) => {
+        e.preventDefault();
     };
 
     return (
@@ -98,7 +107,25 @@ const CreateTrip = () => {
                 <br></br>
                 <input type="submit" value="Submit" />
             </form>
-            <img className="trip-picture" src={TestImg} alt="Trip Picture" />
+            <div>
+                {tripImage ? (
+                    <img
+                        className="trip-picture"
+                        src={tripImage}
+                        alt="Trip Picture"
+                    />
+                ) : (
+                    <img
+                        className="trip-picture"
+                        src={TestImg}
+                        alt="Trip Picture"
+                    />
+                )}
+                <br></br>
+                <input type="file" onChange={handleFileChange} />
+                <br></br>
+                <button onClick={handleFileUpload}>Upload image</button>
+            </div>
         </div>
     );
 };
