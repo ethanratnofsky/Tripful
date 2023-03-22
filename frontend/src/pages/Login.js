@@ -30,7 +30,7 @@ const Login = () => {
     const [showVerificiationError, setShowVerificationError] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [users, setUsers] = useState([]);
-    const [numberExists, setNumberExists] = useState(true);
+    const [numberExists, setNumberExists] = useState(false);
     const [name, setName] = useState([""]);
 
     const navigate = useNavigate();
@@ -144,8 +144,6 @@ const Login = () => {
             users.map((user) => {
                 if (user.phone_number === countryCode + phoneNumber) {
                     setNumberExists(true);
-                } else {
-                    setNumberExists(false);
                 }
             });
         }
@@ -194,7 +192,7 @@ const Login = () => {
                         disabled={isVerifyingCode}
                     />
                 </div>
-                {!numberExists && (
+                {!numberExists && isVerifyingCode && (
                     <>
                         <p className="verification-code-message">
                             This number has not been registered. Please enter

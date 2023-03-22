@@ -19,27 +19,30 @@ const Trip = () => {
     const { tripId } = useParams();
 
     const [trip, setTrip] = useState();
-    const [ideas, setIdeas] = useState(TEST_IDEAS); // TODO: replace with []
+    const [ideas, setIdeas] = useState([]); // TODO: replace with []
 
     const fetchTrip = async (tripId) => {
         // TODO: use endpoint to fetch with tripId
+        const response = await fetch(
+            `${"http://localhost:5000"}/api/read-trip?trip_id=${tripId}`
+        );
+        const data = await response.json();
+        setTrip(data);
+    };
+
+    const fetchIdeas = async (tripId) => {
+        const newResponse = await fetch(
+            `${"http://localhost:5000"}/api/read-trip-ideas?trip_id=${tripId}`
+        );
+        const ideaData = await newResponse.json();
+        setIdeas(ideaData);
+    };
+
+    const updateUpvotes = async (ideaId) => {
         // const response = await fetch(
-        //     `${"http://localhost:5000"}/api/read-trip?trip_id=${tripId}`
+        //     `${"http://localhost:5000"}/api/update-idea-upvotes?ideaId=${ideaId}`
         // );
         // const data = await response.json();
-        // setTrip(data);
-
-        // TODO: remove below
-        const response = await fetch(
-            `${"http://127.0.0.1:5000"}/api/read-trips`
-        );
-        if (response.ok) {
-            const data = await response.json();
-            console.log(data);
-            setTrip(data[0]);
-        } else {
-            console.error("ERROR: Failed to fetch trip");
-        }
     };
 
     useEffect(() => {
@@ -48,12 +51,13 @@ const Trip = () => {
 
     useEffect(() => {
         if (!trip) return;
-
+        fetchIdeas(tripId);
         // TODO: Fetch ideas for this trip
     }, [trip]);
 
-    const handleUpvote = () => {
+    const handleUpvote = (ideaId) => {
         // TODO: add my user id to the upvotes array
+        updateUpvotes(ideaId);
     };
 
     const handleDownvote = () => {
@@ -86,7 +90,7 @@ const Trip = () => {
                                 <div className="idea">
                                     <h3 className="idea-title">{idea.title}</h3>
                                     <p className="idea-author">
-                                        by {idea.author}
+                                        by {idea.created_by}
                                     </p>
                                     <p className="idea-content">
                                         {idea.content}
@@ -112,6 +116,7 @@ const Trip = () => {
                     </ul>
                 </div>
             )}
+            <Link to={`/create-idea/${tripId}`}>Create New Idea</Link>
         </div>
     );
 };

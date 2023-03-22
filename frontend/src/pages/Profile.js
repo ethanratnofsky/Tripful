@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 
@@ -9,19 +9,28 @@ import "./Profile.css";
 import TestImg from "../assets/test.png";
 
 const Profile = () => {
-    const [firstName, setFirstName] = useState("");
     const [phoneNumber, setPhoneNumber] = useState("XXX-XXX-XXXX");
+    const [user, setUser] = useState([]);
 
     const navigate = useNavigate();
 
     onAuthStateChanged(auth, (currentUser) => {
         if (currentUser) {
-            setFirstName(currentUser.uid);
             setPhoneNumber(currentUser.phoneNumber);
+            fetchUser(currentUser.uid);
         } else {
             console.log("User is not logged in.");
         }
     });
+
+    const fetchUser = async (userId) => {
+        // TODO: use endpoint to fetch with tripId
+        const response = await fetch(
+            `${"http://localhost:5000"}/api/read-user?user_id=${userId}`
+        );
+        const data = await response.json();
+        setUser(data);
+    };
 
     const handleEditProfile = () => {
         alert("TODO: Editing profile...");
@@ -43,7 +52,7 @@ const Profile = () => {
             <div className="header">
                 <img className="user-profile" src={TestImg} alt="User" />
                 <div className="user-info">
-                    <h1>Hey, {firstName}!</h1>
+                    <h1>Hey, {user.name}!</h1>
                     <p>
                         <strong>Phone Number:</strong> {phoneNumber}
                     </p>

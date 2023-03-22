@@ -55,7 +55,7 @@ def read_ideas():
 
     return ideas
 
-# Get all of the ideas (for admin view)
+# Get all users
 @app.route("/api/read-users", methods=["GET"])
 def read_users():
     users = []
@@ -65,6 +65,18 @@ def read_users():
         users.append(user)
 
     return users
+
+# Get single user
+@app.route("/api/read-user", methods=["GET"])
+def read_user():
+    args = request.args
+    args_dict = args.to_dict()
+    user_id = args_dict["user_id"]
+
+    user = db["users"].find_one({"_id":user_id})
+    print(user)
+
+    return user
 
 # Post request to create a trip
 @app.route("/api/create-trip", methods=["POST"])
@@ -109,9 +121,9 @@ def create_idea():
     # lookup mongo user info from firebase user info
 
     idea = {
-        # "created_by": "blahblah"
+        "created_by": request_data["createdBy"],
         "title": request_data["title"],
-        # "author": request_data["author"],
+        "associated_trip": request_data["associatedTrip"],
         "created_at": dt.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC"),
         "last_edited": dt.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC"),
         "content": request_data["content"],
@@ -126,21 +138,28 @@ def create_idea():
 # Get request to read ideas from a specific trip
 @app.route("/api/read-trip-ideas", methods=["GET"])
 def read_trip_ideas():
-    request_data = json.loads(request.data)
-    trip = db["trips"].find_one({"_id": request_data["_id"]})
-    trip_ideas_ids = trip["ideas"]
-    trip_ideas = []
+    args = request.args
+    args_dict = args.to_dict()
+    trip_id = args_dict["trip_id"]
 
-    for id in trip_ideas_ids:
-        trip_ideas.append(db["ideas"].find_one({"_id": id}))
+    trip_ideas_list = []
 
-    return trip_ideas
+    trip_ideas = db["ideas"].find({"associated_trip": trip_id})
+    for i in trip_ideas:
+        i["_id"] = str(i["_id"])
+        trip_ideas_list.append(i)
 
-# Get request to read ideas from a specific trip
+    return trip_ideas_list
+
+# Get request to get a specific trip
 @app.route("/api/read-trip", methods=["GET"])
 def read_trip():
-    request_data = json.loads(request.data)
-    trip = db["trips"].find_one({"_id": request_data["_id"]})
+    args = request.args
+    args_dict = args.to_dict()
+    trip_id = args_dict["trip_id"]
+
+    trip = db["trips"].find_one({"_id": ObjectId(trip_id)})
+    trip["_id"] = str(trip["_id"])
 
     return trip
 
@@ -190,6 +209,56 @@ def update_idea():
     }
 
     db["ideas"].replace_one({"_id": ObjectId(id)}, idea)
+
+    return "SUCCESS: Idea updated"
+
+# Put request to update  upvotes
+@app.route("/api/update-idea-upvotes", methods=["PUT"])
+def update_idea_upvotes():
+    args = request.args
+    args_dict = args.to_dict()
+    idea_id = args_dict["idea_id"]
+
+    idea = db["ideas"].find_one({"_id": ObjectId(idea_id)})
+
+    idea = {
+        "_id": idea["_id"],
+        "created_by": "Jon Doe", # TO DO CHANGE THIS TO NAME
+        "title": idea["title"],
+        "associated_trip": idea["associated_trip"],
+        "created_at": idea["created_at"],
+        "last_edited": dt.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC"),
+        "content": idea["content"],
+        "upvotes": idea["upvotes"].append(idea_id),
+        "downvotes": idea["downvotes"]
+    }
+
+    db["ideas"].replace_one({"_id": ObjectId(idea_id)}, idea)
+
+    return "SUCCESS: Idea updated"
+
+# Put request to update  downvotes
+@app.route("/api/update-idea-downvotes", methods=["PUT"])
+def update_idea_downvotes():
+    args = request.args
+    args_dict = args.to_dict()
+    idea_id = args_dict["idea_id"]
+
+    idea = db["ideas"].find_one({"_id": ObjectId(idea_id)})
+
+    idea = {
+        "_id": idea["_id"],
+        "created_by": "Jon Doe", # TO DO CHANGE THIS TO NAME
+        "title": idea["title"],
+        "associated_trip": idea["associated_trip"],
+        "created_at": idea["created_at"],
+        "last_edited": dt.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC"),
+        "content": idea["content"],
+        "upvotes": idea["upvotes"],
+        "downvotes": idea["downvotes"].append(idea_id)
+    }
+
+    db["ideas"].replace_one({"_id": ObjectId(idea_id)}, idea)
 
     return "SUCCESS: Idea updated"
 
