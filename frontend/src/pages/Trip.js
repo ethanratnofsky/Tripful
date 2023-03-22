@@ -3,18 +3,6 @@ import { Link, useParams } from "react-router-dom";
 
 import "./Trip.css";
 
-const TEST_IDEAS = [
-    {
-        _id: 1,
-        title: "Test Idea 1",
-        content: "This is a test idea",
-        author: "Test Author 1",
-        createdAt: "2021-03-01T00:00:00.000Z",
-        upvotes: [],
-        downvotes: [],
-    },
-];
-
 const Trip = () => {
     const { tripId } = useParams();
 
