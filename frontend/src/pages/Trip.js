@@ -94,24 +94,24 @@ const Trip = () => {
                                 <p className="idea-content">{idea.content}</p>
                                 <div className="vote-container">
                                     <label className="upvotes">
-                                        Upvotes
                                         <button
                                             onClick={() =>
                                                 handleUpvote(idea._id)
                                             }
                                         >
-                                            {idea.upvotes.length}
+                                            👍
                                         </button>
+                                        {idea.upvotes.length}
                                     </label>
                                     <label className="downvotes">
-                                        Downvotes
                                         <button
                                             onClick={() =>
                                                 handleDownvote(idea._id)
                                             }
                                         >
-                                            {idea.downvotes.length}
+                                            👎
                                         </button>
+                                        {idea.downvotes.length}
                                     </label>
                                 </div>
                             </li>
