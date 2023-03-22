@@ -1,0 +1,41 @@
+.ideas-list {
+    list-style: none;
+    padding: 0;
+}
+
+.idea-container {
+    background-color: #ddd;
+    border-radius: 5px;
+    padding: 10px 20px;
+    margin-bottom: 10px;
+}
+
+.vote-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.idea-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.idea-title, .idea-date {
+    margin-block: 0.5rem;
+}
+
+.idea-author {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    font-style: italic;
+}
+
+.vote-container label {
+    margin-inline: 5px;
+}
+
+.vote-container button {
+    margin-left: 5px;
+}
