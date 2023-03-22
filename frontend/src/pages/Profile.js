@@ -2,26 +2,16 @@ import React, { useState, useEffect } from "react";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 
-import { auth } from "../../firebase.config";
+// import { auth } from "../../firebase.config";
+import { useAuth } from "../contexts/AuthContext";
 
 import "./Profile.css";
 
 import TestImg from "../assets/test.png";
 
 const Profile = () => {
-    const [phoneNumber, setPhoneNumber] = useState("XXX-XXX-XXXX");
-    const [user, setUser] = useState([]);
-
     const navigate = useNavigate();
-
-    onAuthStateChanged(auth, (currentUser) => {
-        if (currentUser) {
-            setPhoneNumber(currentUser.phoneNumber);
-            fetchUser(currentUser.uid);
-        } else {
-            console.log("User is not logged in.");
-        }
-    });
+    const { currentUser } = useAuth();
 
     const fetchUser = async (userId) => {
         // TODO: use endpoint to fetch with tripId
@@ -52,9 +42,9 @@ const Profile = () => {
             <div className="header">
                 <img className="user-profile" src={TestImg} alt="User" />
                 <div className="user-info">
-                    <h1>Hey, {user.name}!</h1>
+                    <h1>Hey, {currentUser.uid}!</h1>
                     <p>
-                        <strong>Phone Number:</strong> {phoneNumber}
+                        <strong>Phone Number:</strong> {currentUser.phoneNumber}
                     </p>
                     <button onClick={handleEditProfile}>Edit Profile</button>
                     <button onClick={handleLogout}>Logout</button>
