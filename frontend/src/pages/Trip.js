@@ -36,20 +36,29 @@ const Trip = () => {
     useEffect(() => {
         if (!trip) return;
         fetchIdeas(tripId);
-        // TODO: Fetch ideas for this trip
     }, [trip]);
 
-    const handleDelete = () => {
-        fetch("http://127.0.0.1:5000/api/delete-trip", {
-            method: "DELETE",
-            body: JSON.stringify({
-                id: tripId,
-            }),
-            header: {
-                "Content-type": "application/json",
-            },
-        });
-        navigate(-1);
+    const handleDelete = async () => {
+        if (window.confirm("Are you sure you want to delete this trip?")) {
+            try {
+                await fetch("http://127.0.0.1:5000/api/delete-trip", {
+                    method: "DELETE",
+                    body: JSON.stringify({
+                        id: tripId,
+                    }),
+                    header: {
+                        "Content-type": "application/json",
+                    },
+                });
+
+                alert("Trip deleted!");
+
+                navigate(-1);
+            } catch (error) {
+                alert("Error deleting trip. Please try again later.");
+                console.log(error);
+            }
+        }
     };
 
     const handleDeleteIdea = (ideaId) => {
