@@ -180,6 +180,7 @@ const Trip = () => {
                         {isEditing ? (
                             <input
                                 type="datetime-local"
+                                className="trip-start-date"
                                 value={newStartDate}
                                 onInput={handleNewStartDateChange}
                             />
@@ -192,6 +193,7 @@ const Trip = () => {
                         {isEditing ? (
                             <input
                                 type="datetime-local"
+                                className="trip-end-date"
                                 value={newEndDate}
                                 onInput={handleNewEndDateChange}
                             />
@@ -204,6 +206,7 @@ const Trip = () => {
                         {isEditing ? (
                             <input
                                 type="text"
+                                className="trip-location"
                                 value={newLocation}
                                 onChange={handleNewLocationChange}
                             />
