@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import "./Idea.css";
 
-const Idea = ({ idea }) => {
+const Idea = ({ idea, onDelete }) => {
     const [isEditing, setIsEditing] = useState(false);
     const [newTitle, setNewTitle] = useState(idea.title);
     const [newContent, setNewContent] = useState(idea.content);
@@ -19,12 +19,36 @@ const Idea = ({ idea }) => {
         setIsEditing((prev) => !prev);
     };
 
+    useEffect(() => {
+        setNewTitle(idea.title);
+        setNewContent(idea.content);
+    }, [idea, isEditing]);
+
     const handleEdit = () => {
         // TODO: edit idea
     };
 
-    const handleDelete = () => {
-        // TODO: delete idea
+    const handleDelete = async () => {
+        if (window.confirm("Are you sure you want to delete this idea?")) {
+            try {
+                await fetch("http://127.0.0.1:5000/api/delete-idea", {
+                    method: "DELETE",
+                    body: JSON.stringify({
+                        id: idea._id,
+                    }),
+                    header: {
+                        "Content-type": "application/json",
+                    },
+                });
+
+                onDelete(idea._id);
+
+                alert("Idea deleted!");
+            } catch (error) {
+                alert("Error deleting idea. Please try again later.");
+                console.log(error);
+            }
+        }
     };
 
     const handleUpvote = () => {

@@ -52,6 +52,10 @@ const Trip = () => {
         navigate(-1);
     };
 
+    const handleDeleteIdea = (ideaId) => {
+        setIdeas((prev) => prev.filter((idea) => idea._id !== ideaId));
+    };
+
     return (
         <div className="trip-container">
             <Link to=".." className="back-button">
@@ -96,7 +100,11 @@ const Trip = () => {
                             </p>
                         ) : (
                             ideas.map((idea, index) => (
-                                <Idea key={index} idea={idea} />
+                                <Idea
+                                    key={index}
+                                    idea={idea}
+                                    onDelete={() => handleDeleteIdea(idea._id)}
+                                />
                             ))
                         )}
                     </ul>
