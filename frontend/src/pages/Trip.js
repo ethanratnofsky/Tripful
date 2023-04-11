@@ -10,7 +10,13 @@ const Trip = () => {
     const navigate = useNavigate();
 
     const [trip, setTrip] = useState();
+    const [newName, setNewName] = useState();
+    const [newStartDate, setNewStartDate] = useState();
+    const [newEndDate, setNewEndDate] = useState();
+    const [newLocation, setNewLocation] = useState();
+
     const [ideas, setIdeas] = useState([]); // TODO: replace with []
+    const [isEditing, setIsEditing] = useState(false);
 
     const fetchTrip = async (tripId) => {
         // TODO: use endpoint to fetch with tripId
@@ -39,6 +45,51 @@ const Trip = () => {
         // TODO: Fetch ideas for this trip
     }, [trip]);
 
+    useEffect(() => {
+        if (!isEditing && trip) {
+            setNewName(trip.name);
+            setNewStartDate(trip.start_date);
+            setNewEndDate(trip.end_date);
+            setNewLocation(trip.location);
+        }
+    }, [isEditing, trip]);
+
+    const toggleEditMode = () => {
+        setIsEditing((prev) => !prev);
+    };
+
+    const handleEdit = async () => {
+        try {
+            await fetch("http://127.0.0.1:5000/api/update-trip", {
+                method: "PUT",
+                body: JSON.stringify({
+                    ...trip,
+                    name: newName,
+                    start_date: newStartDate,
+                    end_date: newEndDate,
+                    location: newLocation,
+                }),
+                header: {
+                    "Content-type": "application/json",
+                },
+            });
+
+            setTrip((prev) => ({
+                ...prev,
+                name: newName,
+                start_date: newStartDate,
+                end_date: newEndDate,
+                location: newLocation,
+            }));
+
+            alert("Trip updated!");
+            toggleEditMode();
+        } catch (error) {
+            alert("Error editing trip. Please try again later.");
+            console.log(error);
+        }
+    };
+
     const handleDelete = () => {
         fetch("http://127.0.0.1:5000/api/delete-trip", {
             method: "DELETE",
@@ -66,15 +117,37 @@ const Trip = () => {
                     <div className="trip-header">
                         <h1 className="trip-name">{trip.name}</h1>
                         <div>
-                            <button className="edit-trip-button">
-                                ✏️ Edit Trip
-                            </button>
-                            <button
-                                onClick={handleDelete}
-                                className="delete-trip-button"
-                            >
-                                🗑️ Delete Trip
-                            </button>
+                            {isEditing ? (
+                                <>
+                                    <button
+                                        onClick={handleEdit}
+                                        className="save-trip-button"
+                                    >
+                                        ✔️ Save Trip
+                                    </button>
+                                    <button
+                                        onClick={toggleEditMode}
+                                        className="cancel-trip-button"
+                                    >
+                                        ❌ Cancel
+                                    </button>
+                                </>
+                            ) : (
+                                <>
+                                    <button
+                                        onClick={toggleEditMode}
+                                        className="edit-trip-button"
+                                    >
+                                        ✏️ Edit Trip
+                                    </button>
+                                    <button
+                                        onClick={handleDelete}
+                                        className="delete-trip-button"
+                                    >
+                                        🗑️ Delete Trip
+                                    </button>
+                                </>
+                            )}
                         </div>
                     </div>
                     <p className="trip-start-date">
