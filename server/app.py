@@ -221,10 +221,10 @@ def update_idea():
     id = str(request_data["_id"])
 
     idea = {
-        "_id": request_data["_id"],
-        # "created_by": "blahblah"
+        "_id": ObjectId(id),
         "title": request_data["title"],
-        "author": request_data["author"],
+        "associated_trip": request_data["associated_trip"],
+        "created_by": request_data["created_by"],
         "created_at": request_data["created_at"],
         "last_edited": str(datetime.now().isoformat()),
         "content": request_data["content"],

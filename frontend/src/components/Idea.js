@@ -30,7 +30,6 @@ const Idea = ({ idea, onDelete }) => {
 
     const handleEdit = async () => {
         try {
-            // FIXME: 500 error
             await fetch("http://127.0.0.1:5000/api/update-idea", {
                 method: "PUT",
                 body: JSON.stringify({
@@ -47,6 +46,7 @@ const Idea = ({ idea, onDelete }) => {
             setContent(newContent);
 
             alert("Idea updated!");
+            toggleEditMode();
         } catch (error) {
             alert("Error editing idea. Please try again later.");
             console.log(error);
