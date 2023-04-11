@@ -11,6 +11,8 @@ const Idea = ({ idea, onDelete }) => {
     const [newContent, setNewContent] = useState(idea.content);
     const [upvotes, setUpvotes] = useState(idea.upvotes);
     const [downvotes, setDownvotes] = useState(idea.downvotes);
+    // const [isLiked, setIsLiked] = useState(false);
+    // const [isDisliked, setIsDisliked] = useState(false);
 
     const { currentUser } = useAuth();
 
@@ -25,6 +27,14 @@ const Idea = ({ idea, onDelete }) => {
     const toggleEditMode = () => {
         setIsEditing((prev) => !prev);
     };
+
+    // const toggleisLiked = () => {
+    //     setIsLiked((prev) => !prev);
+    // };
+
+    // const toggleisDisliked = () => {
+    //     setIsDisliked((prev) => !prev);
+    // };
 
     useEffect(() => {
         if (!isEditing) {
@@ -99,6 +109,7 @@ const Idea = ({ idea, onDelete }) => {
             // Get the updated idea from the response
             const updatedIdea = await res.json();
             setUpvotes(updatedIdea.upvotes);
+            // toggleisLiked();
         } catch (error) {
             alert("Error liking idea. Please try again later.");
             console.log(error);
@@ -123,6 +134,7 @@ const Idea = ({ idea, onDelete }) => {
             // Get the updated idea from the response
             const updatedIdea = await res.json();
             setDownvotes(updatedIdea.downvotes);
+            // toggleisLiked();
         } catch (error) {
             alert("Error disliking idea. Please try again later.");
             console.log(error);
@@ -191,11 +203,21 @@ const Idea = ({ idea, onDelete }) => {
                 </div>
                 <div>
                     <label className="upvotes">
-                        <button onClick={handleUpvote}>Upvote 👍</button>
+                        <button
+                            disabled={downvotes?.includes(currentUser.uid)}
+                            onClick={handleUpvote}
+                        >
+                            Upvote 👍
+                        </button>
                         {upvotes.length}
                     </label>
                     <label className="downvotes">
-                        <button onClick={handleDownvote}>Downvote 👎</button>
+                        <button
+                            disabled={upvotes?.includes(currentUser.uid)}
+                            onClick={handleDownvote}
+                        >
+                            Downvote 👎
+                        </button>
                         {downvotes.length}
                     </label>
                 </div>
