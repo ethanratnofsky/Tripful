@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useAuth } from "../contexts/AuthContext";
 
 import "./Idea.css";
 
@@ -8,6 +9,10 @@ const Idea = ({ idea, onDelete }) => {
     const [content, setContent] = useState(idea.content);
     const [newTitle, setNewTitle] = useState(idea.title);
     const [newContent, setNewContent] = useState(idea.content);
+    const [upvotes, setUpvotes] = useState(idea.upvotes);
+    const [downvotes, setDownvotes] = useState(idea.downvotes);
+
+    const { currentUser } = useAuth();
 
     const handleNewTitleChange = (e) => {
         setNewTitle(e.target.value);
@@ -76,12 +81,52 @@ const Idea = ({ idea, onDelete }) => {
         }
     };
 
-    const handleUpvote = () => {
-        // TODO: add my user id to the upvotes array
+    const handleUpvote = async () => {
+        try {
+            const res = await fetch(
+                "http://127.0.0.1:5000/api/update-idea-upvotes",
+                {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        id: idea._id,
+                        user_id: currentUser.uid,
+                    }),
+                }
+            );
+            // Get the updated idea from the response
+            const updatedIdea = await res.json();
+            setUpvotes(updatedIdea.upvotes);
+        } catch (error) {
+            alert("Error liking idea. Please try again later.");
+            console.log(error);
+        }
     };
 
-    const handleDownvote = () => {
-        // TODO: add my user id to the downvotes array
+    const handleDownvote = async () => {
+        try {
+            const res = await fetch(
+                "http://127.0.0.1:5000/api/update-idea-downvotes",
+                {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        id: idea._id,
+                        user_id: currentUser.uid,
+                    }),
+                }
+            );
+            // Get the updated idea from the response
+            const updatedIdea = await res.json();
+            setDownvotes(updatedIdea.downvotes);
+        } catch (error) {
+            alert("Error disliking idea. Please try again later.");
+            console.log(error);
+        }
     };
 
     return (
@@ -147,11 +192,11 @@ const Idea = ({ idea, onDelete }) => {
                 <div>
                     <label className="upvotes">
                         <button onClick={handleUpvote}>Upvote 👍</button>
-                        {idea.upvotes.length}
+                        {upvotes.length}
                     </label>
                     <label className="downvotes">
                         <button onClick={handleDownvote}>Downvote 👎</button>
-                        {idea.downvotes.length}
+                        {downvotes.length}
                     </label>
                 </div>
             </div>

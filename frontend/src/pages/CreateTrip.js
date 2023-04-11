@@ -10,8 +10,37 @@ const CreateTrip = () => {
     const [end_date, setEndDate] = useState(new Date());
     const [location, setLocation] = useState("");
     const [emails, setEmails] = useState([]);
+    const [image, setImage] = useState();
+    const [imageUrl, setImageUrl] = useState("");
 
     const navigate = useNavigate();
+
+    const handleImageUpload = (e) => {
+        // setImage(event.target.files[0]);
+        // console.log(image);
+        setImage(e.target.files[0]);
+    };
+
+    const handleImageSubmit = async () => {
+        const formData = new FormData();
+        formData.append("image", image);
+        formData.append("trip_name", trip_name);
+
+        try {
+            const response = await fetch(
+                "http://127.0.0.1:5000/api/upload-image",
+                {
+                    method: "POST",
+                    body: formData,
+                }
+            );
+            const data = await response.json();
+            // setImageUrl(URL.createObjectURL(`/get-image/${trip_name}`));
+            setImageUrl(URL.createObjectURL(image));
+        } catch (error) {
+            console.log(error);
+        }
+    };
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -98,7 +127,19 @@ const CreateTrip = () => {
                 <br></br>
                 <input type="submit" value="Submit" />
             </form>
-            <img className="trip-picture" src={TestImg} alt="Trip Picture" />
+            <br></br>
+            <div>
+                <input type="file" onChange={handleImageUpload} />
+                <button onClick={handleImageSubmit}>Upload Image</button>
+                {imageUrl && (
+                    <img
+                        src={imageUrl}
+                        alt="Uploaded image"
+                        width="300"
+                        height="200"
+                    />
+                )}
+            </div>
         </div>
     );
 };
