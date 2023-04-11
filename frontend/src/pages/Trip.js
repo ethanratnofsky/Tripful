@@ -18,6 +18,22 @@ const Trip = () => {
     const [ideas, setIdeas] = useState([]); // TODO: replace with []
     const [isEditing, setIsEditing] = useState(false);
 
+    const handleNewNameChange = (e) => {
+        setNewName(e.target.value);
+    };
+
+    const handleNewStartDateChange = (e) => {
+        setNewStartDate(e.target.value);
+    };
+
+    const handleNewEndDateChange = (e) => {
+        setNewEndDate(e.target.value);
+    };
+
+    const handleNewLocationChange = (e) => {
+        setNewLocation(e.target.value);
+    };
+
     const fetchTrip = async (tripId) => {
         // TODO: use endpoint to fetch with tripId
         const response = await fetch(
@@ -115,7 +131,16 @@ const Trip = () => {
             {trip && (
                 <div className="trip-info">
                     <div className="trip-header">
-                        <h1 className="trip-name">{trip.name}</h1>
+                        {isEditing ? (
+                            <input
+                                type="text"
+                                className="trip-name"
+                                value={newName}
+                                onChange={handleNewNameChange}
+                            />
+                        ) : (
+                            <h1 className="trip-name">{trip.name}</h1>
+                        )}
                         <div>
                             {isEditing ? (
                                 <>
@@ -151,12 +176,41 @@ const Trip = () => {
                         </div>
                     </div>
                     <p className="trip-start-date">
-                        Start: {new Date(trip.start_date).toLocaleString()}
+                        Start:{" "}
+                        {isEditing ? (
+                            <input
+                                type="datetime-local"
+                                value={newStartDate}
+                                onInput={handleNewStartDateChange}
+                            />
+                        ) : (
+                            new Date(trip.start_date).toLocaleString()
+                        )}
                     </p>
                     <p className="trip-end-date">
-                        End: {new Date(trip.end_date).toLocaleString()}
+                        End:{" "}
+                        {isEditing ? (
+                            <input
+                                type="datetime-local"
+                                value={newEndDate}
+                                onInput={handleNewEndDateChange}
+                            />
+                        ) : (
+                            new Date(trip.end_date).toLocaleString()
+                        )}
                     </p>
-                    <p className="trip-location">Location: {trip.location}</p>
+                    <p className="trip-location">
+                        Location:{" "}
+                        {isEditing ? (
+                            <input
+                                type="text"
+                                value={newLocation}
+                                onChange={handleNewLocationChange}
+                            />
+                        ) : (
+                            trip.location
+                        )}
+                    </p>
                 </div>
             )}
             <div className="idea-board-header">
