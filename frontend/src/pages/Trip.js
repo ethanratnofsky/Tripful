@@ -120,27 +120,38 @@ const Trip = () => {
                                     <p className="idea-content">
                                         {idea.content}
                                     </p>
-                                    <div className="vote-container">
-                                        <label className="upvotes">
-                                            <button
-                                                onClick={() =>
-                                                    handleUpvote(idea._id)
-                                                }
-                                            >
-                                                Upvote 👍
-                                            </button>
-                                            {idea.upvotes.length}
-                                        </label>
-                                        <label className="downvotes">
-                                            <button
-                                                onClick={() =>
-                                                    handleDownvote(idea._id)
-                                                }
-                                            >
-                                                Downvote 👎
-                                            </button>
-                                            {idea.downvotes.length}
-                                        </label>
+                                    <div></div>
+                                    <div className="actions-container">
+                                        <div>
+                                            <label className="edit">
+                                                <button>Edit ✏️</button>
+                                            </label>
+                                            <label className="delete">
+                                                <button>Delete 🗑️</button>
+                                            </label>
+                                        </div>
+                                        <div>
+                                            <label className="upvotes">
+                                                <button
+                                                    onClick={() =>
+                                                        handleUpvote(idea._id)
+                                                    }
+                                                >
+                                                    Upvote 👍
+                                                </button>
+                                                {idea.upvotes.length}
+                                            </label>
+                                            <label className="downvotes">
+                                                <button
+                                                    onClick={() =>
+                                                        handleDownvote(idea._id)
+                                                    }
+                                                >
+                                                    Downvote 👎
+                                                </button>
+                                                {idea.downvotes.length}
+                                            </label>
+                                        </div>
                                     </div>
                                 </li>
                             ))

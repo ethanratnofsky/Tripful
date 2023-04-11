@@ -47,10 +47,10 @@ a.create-idea-button:hover {
     margin-bottom: 10px;
 }
 
-.vote-container {
+.actions-container {
     display: flex;
     align-items: center;
-    justify-content: flex-end;
+    justify-content: space-between;
 }
 
 .idea-header {
@@ -69,10 +69,11 @@ a.create-idea-button:hover {
     font-style: italic;
 }
 
-.vote-container label {
+.actions-container label {
     margin-inline: 5px;
 }
 
-.vote-container button {
+.actions-container button {
     margin-right: 5px;
+    cursor: pointer;
 }
