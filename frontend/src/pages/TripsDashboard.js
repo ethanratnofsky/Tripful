@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 
 import "./TripsDashboard.css";
 
@@ -10,8 +11,12 @@ const TripsDashboard = () => {
 
     const [filter, setFilter] = useState("all");
 
-    const getTrips = () => {
-        fetch("http://127.0.0.1:5000/api/read-trips")
+    const { currentUser } = useAuth();
+
+    const getTrips = async (userId) => {
+        await fetch(
+            `${"http://127.0.0.1:5000"}/api/read-user-trips?user_id=${userId}`
+        )
             .then((response) => {
                 if (response.ok) {
                     return response.json();
@@ -22,7 +27,8 @@ const TripsDashboard = () => {
 
     // update trips when page first loads
     useEffect(() => {
-        getTrips();
+        console.log(currentUser.uid);
+        getTrips(currentUser.uid);
     }, []);
 
     useEffect(() => {

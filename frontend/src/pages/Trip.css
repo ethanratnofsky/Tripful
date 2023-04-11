@@ -22,7 +22,8 @@
     align-items: center;
 }
 
-.idea-title, .idea-date {
+.idea-title,
+.idea-date {
     margin-block: 0.5rem;
 }
 

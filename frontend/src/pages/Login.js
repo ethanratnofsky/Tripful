@@ -82,7 +82,7 @@ const Login = () => {
                 // User signed in successfully.
                 const user = result.user;
                 console.log("Code is correct! Logged-in user ID: ", user.uid);
-                navigate("/");
+                // make post request to create user
                 if (!numberExists) {
                     fetch("http://127.0.0.1:5000/api/create-user", {
                         method: "POST",
@@ -98,7 +98,7 @@ const Login = () => {
                         response.json();
                     });
                 }
-                // make post request to create user
+                navigate("/");
             })
             .catch((error) => {
                 // User couldn't sign in (bad verification code?)

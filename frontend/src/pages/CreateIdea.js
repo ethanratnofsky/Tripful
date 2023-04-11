@@ -1,23 +1,40 @@
 import React from "react";
 import "./CreateTrip.css";
 import TestImg from "../assets/test.png";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 
 const CreateIdea = () => {
     const [ideaName, setName] = useState("");
+    const [user, setUser] = useState();
     const [content, setContent] = useState("");
 
     const navigate = useNavigate();
+    const { currentUser } = useAuth();
 
     const { tripId } = useParams();
+
+    const fetchUser = async (userId) => {
+        const response = await fetch(
+            `${"http://127.0.0.1:5000"}/api/read-user?user_id=${userId}`
+        );
+        const data = await response.json();
+        setUser(data);
+        console.log(data);
+    };
+
+    useEffect(() => {
+        console.log(currentUser.uid);
+        fetchUser(currentUser.uid);
+    }, []);
 
     const handleSubmit = (e) => {
         e.preventDefault();
         fetch("http://127.0.0.1:5000/api/create-idea", {
             method: "POST",
             body: JSON.stringify({
-                createdBy: "Jon Doe",
+                createdBy: user.name,
                 title: ideaName,
                 associatedTrip: tripId,
                 content: content,
