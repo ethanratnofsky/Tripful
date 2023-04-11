@@ -1,42 +1,41 @@
-.ideas-list {
-    list-style: none;
-    padding: 0;
-}
-
-.idea-container {
-    background-color: #ddd;
-    border-radius: 5px;
-    padding: 10px 20px;
-    margin-bottom: 10px;
-}
-
-.vote-container {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-}
-
-.idea-header {
+.trip-header, .idea-board-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-.idea-title,
-.idea-date {
-    margin-block: 0.5rem;
+button.delete-trip-button {
+    all: unset;
+    text-decoration: none;
+    color: red;
+    border: 1px solid red;
+    padding: 10px 20px;
+    border-radius: 5px;
 }
 
-.idea-author {
-    margin-top: 0;
-    margin-bottom: 0.5rem;
-    font-style: italic;
+button.delete-trip-button:hover {
+    background-color: #f2f2f2;
+    cursor: pointer;
 }
 
-.vote-container label {
-    margin-inline: 5px;
+a.create-idea-button {
+    text-decoration: none;
+    color: inherit;
+    border: 1px solid black;
+    padding: 10px 20px;
+    border-radius: 5px;
 }
 
-.vote-container button {
-    margin-right: 5px;
+a.create-idea-button:hover {
+    background-color: #f2f2f2;
+}
+
+.ideas-list {
+    list-style: none;
+    padding: 0;
+}
+
+.no-ideas-message {
+    text-align: center;
+    margin-top: 20px;
 }

@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
+import Idea from "../components/Idea";
 
 import { useAuth } from "../contexts/AuthContext";
 
@@ -61,70 +62,6 @@ const Trip = () => {
         // TODO: Fetch ideas for this trip
     }, [trip]);
 
-    const handleUpvote = async (ideaId) => {
-        const res = await fetch(
-            "http://127.0.0.1:5000/api/update-idea-upvotes",
-            {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    id: ideaId,
-                    user_id: currentUser.uid,
-                }),
-            }
-        );
-
-        // Get the updated idea from the response
-        const updatedIdea = await res.json();
-
-        let temp = [];
-        ideas.map((idea) => {
-            if (idea._id === updatedIdea._id) {
-                let newUpvotes = updatedIdea.upvotes;
-                idea.upvotes = newUpvotes;
-                temp.push(idea);
-            } else {
-                temp.push(idea);
-            }
-        });
-        temp.sort((a, b) => b.upvotes - a.upvotes);
-
-        // Map over the ideas array and update the upvotes for the idea that was just upvoted
-        setIdeas(temp);
-    };
-
-    const handleDownvote = async (ideaId) => {
-        const res = await fetch(
-            "http://127.0.0.1:5000/api/update-idea-downvotes",
-            {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ id: ideaId, user_id: currentUser.uid }),
-            }
-        );
-        // Get the updated idea from the response
-        const updatedIdea = await res.json();
-
-        let temp = [];
-        ideas.map((idea) => {
-            if (idea._id === updatedIdea._id) {
-                let newDownvotes = updatedIdea.downvotes;
-                idea.downvotes = newDownvotes;
-                temp.push(idea);
-            } else {
-                temp.push(idea);
-            }
-        });
-        temp.sort((a, b) => b.upvotes - a.upvotes);
-
-        // Map over the ideas array and update the upvotes for the idea that was just upvoted
-        setIdeas(temp);
-    };
-
     const handleDelete = () => {
         fetch("http://127.0.0.1:5000/api/delete-trip", {
             method: "DELETE",
@@ -138,6 +75,10 @@ const Trip = () => {
         navigate(-1);
     };
 
+    const handleDeleteIdea = (ideaId) => {
+        setIdeas((prev) => prev.filter((idea) => idea._id !== ideaId));
+    };
+
     return (
         <div className="trip-container">
             <Link to=".." className="back-button">
@@ -146,7 +87,15 @@ const Trip = () => {
             {trip && (
                 <div className="trip-info">
                     <img src={imageUrl} />
-                    <h1 className="trip-name">{trip.name}</h1>
+                    <div className="trip-header">
+                        <h1 className="trip-name">{trip.name}</h1>
+                        <button
+                            onClick={handleDelete}
+                            className="delete-trip-button"
+                        >
+                            🗑️ Delete Trip
+                        </button>
+                    </div>
                     <p className="trip-start-date">
                         Start: {new Date(trip.start_date).toLocaleString()}
                     </p>
@@ -154,52 +103,34 @@ const Trip = () => {
                         End: {new Date(trip.end_date).toLocaleString()}
                     </p>
                     <p className="trip-location">Location: {trip.location}</p>
-                    <button onClick={handleDelete}>Delete Trip</button>
                 </div>
             )}
-            <h2>Idea Board</h2>
-            <Link to={`/create-idea/${tripId}`}>Create New Idea</Link>
+            <div className="idea-board-header">
+                <h2>Idea Board</h2>
+                <Link
+                    to={`/create-idea/${tripId}`}
+                    className="create-idea-button"
+                >
+                    + New Idea
+                </Link>
+            </div>
             {ideas && (
                 <div className="ideas-board">
                     <ul className="ideas-list">
-                        {ideas.map((idea, index) => (
-                            <li key={index} className="idea-container">
-                                <div className="idea-header">
-                                    <h3 className="idea-title">{idea.title}</h3>
-                                    <p className="idea-date">
-                                        {new Date(
-                                            idea.created_at
-                                        ).toLocaleString()}
-                                    </p>
-                                </div>
-                                <p className="idea-author">
-                                    by {idea.created_by}
-                                </p>
-                                <p className="idea-content">{idea.content}</p>
-                                <div className="vote-container">
-                                    <label className="upvotes">
-                                        <button
-                                            onClick={() => {
-                                                handleUpvote(idea._id);
-                                            }}
-                                        >
-                                            👍
-                                        </button>
-                                        {idea.upvotes}
-                                    </label>
-                                    <label className="downvotes">
-                                        <button
-                                            onClick={() =>
-                                                handleDownvote(idea._id)
-                                            }
-                                        >
-                                            👎
-                                        </button>
-                                        {idea.downvotes}
-                                    </label>
-                                </div>
-                            </li>
-                        ))}
+                        {ideas.length === 0 ? (
+                            <p className="no-ideas-message">
+                                There are no ideas for this trip yet. Get
+                                creative!
+                            </p>
+                        ) : (
+                            ideas.map((idea, index) => (
+                                <Idea
+                                    key={index}
+                                    idea={idea}
+                                    onDelete={() => handleDeleteIdea(idea._id)}
+                                />
+                            ))
+                        )}
                     </ul>
                 </div>
             )}
