@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
+import Idea from "../components/Idea";
 
 import "./Trip.css";
 
@@ -37,14 +38,6 @@ const Trip = () => {
         fetchIdeas(tripId);
         // TODO: Fetch ideas for this trip
     }, [trip]);
-
-    const handleUpvote = (ideaId) => {
-        // TODO: add my user id to the upvotes array
-    };
-
-    const handleDownvote = (ideaId) => {
-        // TODO: add my user id to the downvotes array
-    };
 
     const handleDelete = () => {
         fetch("http://127.0.0.1:5000/api/delete-trip", {
@@ -103,57 +96,7 @@ const Trip = () => {
                             </p>
                         ) : (
                             ideas.map((idea, index) => (
-                                <li key={index} className="idea-container">
-                                    <div className="idea-header">
-                                        <h3 className="idea-title">
-                                            {idea.title}
-                                        </h3>
-                                        <p className="idea-date">
-                                            {new Date(
-                                                idea.created_at
-                                            ).toLocaleString()}
-                                        </p>
-                                    </div>
-                                    <p className="idea-author">
-                                        by {idea.created_by}
-                                    </p>
-                                    <p className="idea-content">
-                                        {idea.content}
-                                    </p>
-                                    <div></div>
-                                    <div className="actions-container">
-                                        <div>
-                                            <label className="edit">
-                                                <button>Edit ✏️</button>
-                                            </label>
-                                            <label className="delete">
-                                                <button>Delete 🗑️</button>
-                                            </label>
-                                        </div>
-                                        <div>
-                                            <label className="upvotes">
-                                                <button
-                                                    onClick={() =>
-                                                        handleUpvote(idea._id)
-                                                    }
-                                                >
-                                                    Upvote 👍
-                                                </button>
-                                                {idea.upvotes.length}
-                                            </label>
-                                            <label className="downvotes">
-                                                <button
-                                                    onClick={() =>
-                                                        handleDownvote(idea._id)
-                                                    }
-                                                >
-                                                    Downvote 👎
-                                                </button>
-                                                {idea.downvotes.length}
-                                            </label>
-                                        </div>
-                                    </div>
-                                </li>
+                                <Idea key={index} idea={idea} />
                             ))
                         )}
                     </ul>
