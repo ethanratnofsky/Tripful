@@ -4,14 +4,16 @@ import "./Idea.css";
 
 const Idea = ({ idea, onDelete }) => {
     const [isEditing, setIsEditing] = useState(false);
+    const [title, setTitle] = useState(idea.title);
+    const [content, setContent] = useState(idea.content);
     const [newTitle, setNewTitle] = useState(idea.title);
     const [newContent, setNewContent] = useState(idea.content);
 
-    const handleTitleChange = (e) => {
+    const handleNewTitleChange = (e) => {
         setNewTitle(e.target.value);
     };
 
-    const handleContentChange = (e) => {
+    const handleNewContentChange = (e) => {
         setNewContent(e.target.value);
     };
 
@@ -20,12 +22,35 @@ const Idea = ({ idea, onDelete }) => {
     };
 
     useEffect(() => {
-        setNewTitle(idea.title);
-        setNewContent(idea.content);
-    }, [idea, isEditing]);
+        if (!isEditing) {
+            setNewTitle(title);
+            setNewContent(content);
+        }
+    }, [isEditing]);
 
-    const handleEdit = () => {
-        // TODO: edit idea
+    const handleEdit = async () => {
+        try {
+            // FIXME: 500 error
+            await fetch("http://127.0.0.1:5000/api/update-idea", {
+                method: "PUT",
+                body: JSON.stringify({
+                    ...idea,
+                    title: newTitle,
+                    content: newContent,
+                }),
+                header: {
+                    "Content-type": "application/json",
+                },
+            });
+
+            setTitle(newTitle);
+            setContent(newContent);
+
+            alert("Idea updated!");
+        } catch (error) {
+            alert("Error editing idea. Please try again later.");
+            console.log(error);
+        }
     };
 
     const handleDelete = async () => {
@@ -67,11 +92,11 @@ const Idea = ({ idea, onDelete }) => {
                         type="text"
                         className="idea-title"
                         value={newTitle}
-                        onChange={handleTitleChange}
+                        onChange={handleNewTitleChange}
                         placeholder="Title"
                     />
                 ) : (
-                    <h3 className="idea-title">{idea.title}</h3>
+                    <h3 className="idea-title">{title}</h3>
                 )}
                 <p className="idea-date">
                     {new Date(idea.created_at).toLocaleString()}
@@ -82,11 +107,11 @@ const Idea = ({ idea, onDelete }) => {
                 <textarea
                     className="idea-content"
                     value={newContent}
-                    onChange={handleContentChange}
+                    onChange={handleNewContentChange}
                     placeholder="Content"
                 />
             ) : (
-                <p className="idea-content">{idea.content}</p>
+                <p className="idea-content">{content}</p>
             )}
             <div className="actions-container">
                 <div>
