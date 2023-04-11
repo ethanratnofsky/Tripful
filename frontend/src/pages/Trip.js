@@ -135,7 +135,7 @@ const Trip = () => {
     return (
         <div className="trip-container">
             <Link to=".." className="back-button">
-                Back to Trips
+                ← Back
             </Link>
             {trip && (
                 <div className="trip-info">
