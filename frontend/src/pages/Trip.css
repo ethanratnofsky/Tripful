@@ -4,15 +4,23 @@
     align-items: center;
 }
 
+button.edit-trip-button, 
 button.delete-trip-button {
     all: unset;
     text-decoration: none;
-    color: red;
-    border: 1px solid red;
+    color: inherit;
+    border: 1px solid black;
     padding: 10px 20px;
     border-radius: 5px;
+    margin-inline: 5px;
 }
 
+button.delete-trip-button {
+    color: red;
+    border: 1px solid red;
+}
+
+button.edit-trip-button:hover,
 button.delete-trip-button:hover {
     background-color: #f2f2f2;
     cursor: pointer;

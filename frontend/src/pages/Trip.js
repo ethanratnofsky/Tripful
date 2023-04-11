@@ -65,12 +65,17 @@ const Trip = () => {
                 <div className="trip-info">
                     <div className="trip-header">
                         <h1 className="trip-name">{trip.name}</h1>
-                        <button
-                            onClick={handleDelete}
-                            className="delete-trip-button"
-                        >
-                            🗑️ Delete Trip
-                        </button>
+                        <div>
+                            <button className="edit-trip-button">
+                                ✏️ Edit Trip
+                            </button>
+                            <button
+                                onClick={handleDelete}
+                                className="delete-trip-button"
+                            >
+                                🗑️ Delete Trip
+                            </button>
+                        </div>
                     </div>
                     <p className="trip-start-date">
                         Start: {new Date(trip.start_date).toLocaleString()}
