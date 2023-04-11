@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
+import Idea from "../components/Idea";
 
 import "./Trip.css";
 
@@ -38,14 +39,6 @@ const Trip = () => {
         // TODO: Fetch ideas for this trip
     }, [trip]);
 
-    const handleUpvote = (ideaId) => {
-        // TODO: add my user id to the upvotes array
-    };
-
-    const handleDownvote = (ideaId) => {
-        // TODO: add my user id to the downvotes array
-    };
-
     const handleDelete = () => {
         fetch("http://127.0.0.1:5000/api/delete-trip", {
             method: "DELETE",
@@ -59,6 +52,10 @@ const Trip = () => {
         navigate(-1);
     };
 
+    const handleDeleteIdea = (ideaId) => {
+        setIdeas((prev) => prev.filter((idea) => idea._id !== ideaId));
+    };
+
     return (
         <div className="trip-container">
             <Link to=".." className="back-button">
@@ -66,7 +63,15 @@ const Trip = () => {
             </Link>
             {trip && (
                 <div className="trip-info">
-                    <h1 className="trip-name">{trip.name}</h1>
+                    <div className="trip-header">
+                        <h1 className="trip-name">{trip.name}</h1>
+                        <button
+                            onClick={handleDelete}
+                            className="delete-trip-button"
+                        >
+                            🗑️ Delete Trip
+                        </button>
+                    </div>
                     <p className="trip-start-date">
                         Start: {new Date(trip.start_date).toLocaleString()}
                     </p>
@@ -74,7 +79,6 @@ const Trip = () => {
                         End: {new Date(trip.end_date).toLocaleString()}
                     </p>
                     <p className="trip-location">Location: {trip.location}</p>
-                    <button onClick={handleDelete}>Delete Trip</button>
                 </div>
             )}
             <div className="idea-board-header">
@@ -96,46 +100,11 @@ const Trip = () => {
                             </p>
                         ) : (
                             ideas.map((idea, index) => (
-                                <li key={index} className="idea-container">
-                                    <div className="idea-header">
-                                        <h3 className="idea-title">
-                                            {idea.title}
-                                        </h3>
-                                        <p className="idea-date">
-                                            {new Date(
-                                                idea.created_at
-                                            ).toLocaleString()}
-                                        </p>
-                                    </div>
-                                    <p className="idea-author">
-                                        by {idea.created_by}
-                                    </p>
-                                    <p className="idea-content">
-                                        {idea.content}
-                                    </p>
-                                    <div className="vote-container">
-                                        <label className="upvotes">
-                                            <button
-                                                onClick={() =>
-                                                    handleUpvote(idea._id)
-                                                }
-                                            >
-                                                Upvote 👍
-                                            </button>
-                                            {idea.upvotes.length}
-                                        </label>
-                                        <label className="downvotes">
-                                            <button
-                                                onClick={() =>
-                                                    handleDownvote(idea._id)
-                                                }
-                                            >
-                                                Downvote 👎
-                                            </button>
-                                            {idea.downvotes.length}
-                                        </label>
-                                    </div>
-                                </li>
+                                <Idea
+                                    key={index}
+                                    idea={idea}
+                                    onDelete={() => handleDeleteIdea(idea._id)}
+                                />
                             ))
                         )}
                     </ul>
