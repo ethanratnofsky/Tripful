@@ -4,6 +4,16 @@ import "./Idea.css";
 
 const Idea = ({ idea }) => {
     const [isEditing, setIsEditing] = useState(false);
+    const [newTitle, setNewTitle] = useState(idea.title);
+    const [newContent, setNewContent] = useState(idea.content);
+
+    const handleTitleChange = (e) => {
+        setNewTitle(e.target.value);
+    };
+
+    const handleContentChange = (e) => {
+        setNewContent(e.target.value);
+    };
 
     const toggleEditMode = () => {
         setIsEditing((prev) => !prev);
@@ -28,13 +38,32 @@ const Idea = ({ idea }) => {
     return (
         <li className="idea-container">
             <div className="idea-header">
-                <h3 className="idea-title">{idea.title}</h3>
+                {isEditing ? (
+                    <input
+                        type="text"
+                        className="idea-title"
+                        value={newTitle}
+                        onChange={handleTitleChange}
+                        placeholder="Title"
+                    />
+                ) : (
+                    <h3 className="idea-title">{idea.title}</h3>
+                )}
                 <p className="idea-date">
                     {new Date(idea.created_at).toLocaleString()}
                 </p>
             </div>
             <p className="idea-author">by {idea.created_by}</p>
-            <p className="idea-content">{idea.content}</p>
+            {isEditing ? (
+                <textarea
+                    className="idea-content"
+                    value={newContent}
+                    onChange={handleContentChange}
+                    placeholder="Content"
+                />
+            ) : (
+                <p className="idea-content">{idea.content}</p>
+            )}
             <div className="actions-container">
                 <div>
                     {isEditing ? (

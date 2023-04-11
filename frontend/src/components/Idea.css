@@ -17,6 +17,11 @@
     align-items: center;
 }
 
+.idea-title {
+    font: inherit;
+    font-weight: bold;
+}
+
 .idea-title, .idea-date {
     margin-block: 0.5rem;
 }
@@ -25,6 +30,15 @@
     margin-top: 0;
     margin-bottom: 0.5rem;
     font-style: italic;
+}
+
+.idea-content {
+    font: inherit;
+}
+
+textarea.idea-content {
+    width: 100%;
+    margin-bottom: 1rem;
 }
 
 .actions-container label {
