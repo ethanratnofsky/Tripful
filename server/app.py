@@ -327,6 +327,7 @@ def delete_trip():
 
 # Delete request for idea
 @app.route("/api/delete-idea", methods=["DELETE"])
+@cross_origin()
 def delete_idea():
     request_data = json.loads(request.data)
     db["ideas"].delete_one({"_id": ObjectId(request_data["id"])})
