@@ -6,7 +6,7 @@ from uuid import uuid4
 from datetime import datetime
 # from dotenv import load_dotenv, find_dotenv
 import os
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 
 # ********************************
 #           APP CONFIG
@@ -38,6 +38,7 @@ db = cluster["tripful"]
 
 
 @app.route("/api/read-trips", methods=["GET"])
+@cross_origin()
 def read_trips():
     trips = []
     trip_info = db["trips"].find()
@@ -51,6 +52,7 @@ def read_trips():
 
 
 @app.route("/api/read-ideas", methods=["GET"])
+@cross_origin()
 def read_ideas():
     ideas = []
     idea_info = db["ideas"].find()
@@ -64,6 +66,7 @@ def read_ideas():
 
 
 @app.route("/api/read-users", methods=["GET"])
+@cross_origin()
 def read_users():
     users = []
     user_info = db["users"].find()
@@ -77,6 +80,7 @@ def read_users():
 
 
 @app.route("/api/read-user", methods=["GET"])
+@cross_origin()
 def read_user():
     args = request.args
     args_dict = args.to_dict()
@@ -91,6 +95,7 @@ def read_user():
 
 
 @app.route("/api/create-trip", methods=["POST"])
+@cross_origin()
 def create_trip():
     request_data = json.loads(request.data)
 
@@ -112,6 +117,7 @@ def create_trip():
 
 
 @app.route("/api/create-user", methods=["POST"])
+@cross_origin()
 def create_user():
     request_data = json.loads(request.data)
 
@@ -129,6 +135,7 @@ def create_user():
 
 
 @app.route("/api/create-idea", methods=["POST"])
+@cross_origin()
 def create_idea():
     request_data = json.loads(request.data)
 
@@ -153,6 +160,7 @@ def create_idea():
 
 
 @app.route("/api/read-trip-ideas", methods=["GET"])
+@cross_origin()
 def read_trip_ideas():
     args = request.args
     args_dict = args.to_dict()
@@ -171,6 +179,7 @@ def read_trip_ideas():
 
 
 @app.route("/api/read-trip", methods=["GET"])
+@cross_origin()
 def read_trip():
     args = request.args
     args_dict = args.to_dict()
@@ -185,6 +194,7 @@ def read_trip():
 
 
 @app.route("/api/read-user-trips", methods=["GET"])
+@cross_origin()
 def read_user_trips():
     request_data = json.loads(request.data)
     trips = db["trips"].find({"created_by": request_data["created_by"]})
@@ -195,6 +205,7 @@ def read_user_trips():
 
 
 @app.route("/api/update-trip", methods=["PUT"])
+@cross_origin()
 def update_trip():
     request_data = json.loads(request.data)
     id = str(request_data["_id"])
@@ -217,6 +228,7 @@ def update_trip():
 
 
 @app.route("/api/update-idea", methods=["PUT"])
+@cross_origin()
 def update_idea():
     request_data = json.loads(request.data)
     id = str(request_data["_id"])
@@ -241,6 +253,7 @@ def update_idea():
 
 
 @app.route("/api/update-idea-upvotes", methods=["PUT"])
+@cross_origin()
 def update_idea_upvotes():
     args = request.args
     args_dict = args.to_dict()
@@ -268,6 +281,7 @@ def update_idea_upvotes():
 
 
 @app.route("/api/update-idea-downvotes", methods=["PUT"])
+@cross_origin()
 def update_idea_downvotes():
     args = request.args
     args_dict = args.to_dict()
@@ -295,6 +309,7 @@ def update_idea_downvotes():
 
 
 @app.route("/api/delete-trip", methods=["DELETE"])
+@cross_origin()
 def delete_trip():
     request_data = json.loads(request.data)
     db["trips"].delete_one({"_id": ObjectId(request_data["id"])})
@@ -304,6 +319,7 @@ def delete_trip():
 
 # Delete request for idea
 @app.route("/api/delete-idea", methods=["DELETE"])
+@cross_origin()
 def delete_idea():
     request_data = json.loads(request.data)
     db["ideas"].delete_one({"_id": ObjectId(request_data["id"])})
