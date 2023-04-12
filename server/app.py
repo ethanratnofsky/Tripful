@@ -165,7 +165,16 @@ def create_idea():
         "downvotes": []
     }
 
-    db["ideas"].insert_one(idea)
+    inserted_idea = db["ideas"].insert_one(idea)
+    trip = db["trips"].find_one({'_id': ObjectId(request_data["associatedTrip"])})
+    temp = trip
+    temp["ideas"].append(str(inserted_idea.inserted_id))
+    db["trips"].replace_one({'_id': ObjectId(request_data["associatedTrip"])}, temp)
+    # filter = { '_id': request_data["associatedTrip"] }
+    # newvalue = { "$push": { 'ideas': inserted_idea.inserted_id } }
+
+    # db["trips"].update_one(filter, newvalue),
+
 
     return "SUCCESS: Idea created"
 
@@ -306,6 +315,11 @@ def update_idea_downvotes():
 @app.route("/api/delete-trip", methods=["DELETE"])
 def delete_trip():
     request_data = json.loads(request.data)
+    trip = db["trips"].find_one({"_id": ObjectId(request_data["id"])})
+
+    for idea in trip["ideas"]:
+        db["ideas"].delete_one({"_id": ObjectId(idea)})
+
     db["trips"].delete_one({"_id": ObjectId(request_data["id"])})
 
     return "SUCCESS: Deleted trip"

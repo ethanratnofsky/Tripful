@@ -3,6 +3,7 @@ import "./CreateTrip.css";
 import TestImg from "../assets/test.png";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 
 const CreateTrip = () => {
     const [trip_name, setName] = useState("");
@@ -14,6 +15,8 @@ const CreateTrip = () => {
     const [imageUrl, setImageUrl] = useState("");
 
     const navigate = useNavigate();
+
+    const { currentUser } = useAuth();
 
     const handleImageUpload = (e) => {
         // setImage(event.target.files[0]);
@@ -47,6 +50,7 @@ const CreateTrip = () => {
         fetch("http://127.0.0.1:5000/api/create-trip", {
             method: "POST",
             body: JSON.stringify({
+                user_id: currentUser.uid,
                 name: trip_name,
                 start_date: start_date.toString(),
                 end_date: end_date.toString(),
