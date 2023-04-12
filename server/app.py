@@ -235,6 +235,7 @@ def update_trip():
         "name": request_data["name"],
         "start_date": request_data["start_date"],
         "end_date": request_data["end_date"],
+        "location": request_data["location"],
         "guests": request_data["guests"],
         "ideas": request_data["ideas"]
     }

@@ -15,7 +15,29 @@ const Trip = () => {
 
     const [trip, setTrip] = useState();
     const [imageUrl, setImageUrl] = useState("");
+    const [newName, setNewName] = useState();
+    const [newStartDate, setNewStartDate] = useState();
+    const [newEndDate, setNewEndDate] = useState();
+    const [newLocation, setNewLocation] = useState();
+
     const [ideas, setIdeas] = useState([]); // TODO: replace with []
+    const [isEditing, setIsEditing] = useState(false);
+
+    const handleNewNameChange = (e) => {
+        setNewName(e.target.value);
+    };
+
+    const handleNewStartDateChange = (e) => {
+        setNewStartDate(e.target.value);
+    };
+
+    const handleNewEndDateChange = (e) => {
+        setNewEndDate(e.target.value);
+    };
+
+    const handleNewLocationChange = (e) => {
+        setNewLocation(e.target.value);
+    };
 
     const { currentUser } = useAuth();
 
@@ -59,20 +81,74 @@ const Trip = () => {
             }
         };
         fetchImage();
-        // TODO: Fetch ideas for this trip
     }, [trip]);
 
-    const handleDelete = () => {
-        fetch("http://127.0.0.1:5000/api/delete-trip", {
-            method: "DELETE",
-            body: JSON.stringify({
-                id: tripId,
-            }),
-            header: {
-                "Content-type": "application/json",
-            },
-        });
-        navigate(-1);
+    useEffect(() => {
+        if (!isEditing && trip) {
+            setNewName(trip.name);
+            setNewStartDate(trip.start_date);
+            setNewEndDate(trip.end_date);
+            setNewLocation(trip.location);
+        }
+    }, [isEditing, trip]);
+
+    const toggleEditMode = () => {
+        setIsEditing((prev) => !prev);
+    };
+
+    const handleEdit = async () => {
+        try {
+            await fetch("http://127.0.0.1:5000/api/update-trip", {
+                method: "PUT",
+                body: JSON.stringify({
+                    ...trip,
+                    name: newName,
+                    start_date: newStartDate,
+                    end_date: newEndDate,
+                    location: newLocation,
+                }),
+                header: {
+                    "Content-type": "application/json",
+                },
+            });
+
+            setTrip((prev) => ({
+                ...prev,
+                name: newName,
+                start_date: newStartDate,
+                end_date: newEndDate,
+                location: newLocation,
+            }));
+
+            alert("Trip updated!");
+            toggleEditMode();
+        } catch (error) {
+            alert("Error editing trip. Please try again later.");
+            console.log(error);
+        }
+    };
+
+    const handleDelete = async () => {
+        if (window.confirm("Are you sure you want to delete this trip?")) {
+            try {
+                await fetch("http://127.0.0.1:5000/api/delete-trip", {
+                    method: "DELETE",
+                    body: JSON.stringify({
+                        id: tripId,
+                    }),
+                    header: {
+                        "Content-type": "application/json",
+                    },
+                });
+
+                alert("Trip deleted!");
+
+                navigate(-1);
+            } catch (error) {
+                alert("Error deleting trip. Please try again later.");
+                console.log(error);
+            }
+        }
     };
 
     const handleDeleteIdea = (ideaId) => {
@@ -82,27 +158,95 @@ const Trip = () => {
     return (
         <div className="trip-container">
             <Link to=".." className="back-button">
-                Back to Trips
+                ← Back
             </Link>
             {trip && (
                 <div className="trip-info">
                     <img src={imageUrl} />
                     <div className="trip-header">
-                        <h1 className="trip-name">{trip.name}</h1>
-                        <button
-                            onClick={handleDelete}
-                            className="delete-trip-button"
-                        >
-                            🗑️ Delete Trip
-                        </button>
+                        {isEditing ? (
+                            <input
+                                type="text"
+                                className="trip-name"
+                                value={newName}
+                                onChange={handleNewNameChange}
+                            />
+                        ) : (
+                            <h1 className="trip-name">{trip.name}</h1>
+                        )}
+                        <div>
+                            {isEditing ? (
+                                <>
+                                    <button
+                                        onClick={handleEdit}
+                                        className="save-trip-button"
+                                    >
+                                        ✔️ Save Trip
+                                    </button>
+                                    <button
+                                        onClick={toggleEditMode}
+                                        className="cancel-trip-button"
+                                    >
+                                        ❌ Cancel
+                                    </button>
+                                </>
+                            ) : (
+                                <>
+                                    <button
+                                        onClick={toggleEditMode}
+                                        className="edit-trip-button"
+                                    >
+                                        ✏️ Edit Trip
+                                    </button>
+                                    <button
+                                        onClick={handleDelete}
+                                        className="delete-trip-button"
+                                    >
+                                        🗑️ Delete Trip
+                                    </button>
+                                </>
+                            )}
+                        </div>
                     </div>
                     <p className="trip-start-date">
-                        Start: {new Date(trip.start_date).toLocaleString()}
+                        Start:{" "}
+                        {isEditing ? (
+                            <input
+                                type="datetime-local"
+                                className="trip-start-date"
+                                value={newStartDate}
+                                onInput={handleNewStartDateChange}
+                            />
+                        ) : (
+                            new Date(trip.start_date).toLocaleString()
+                        )}
                     </p>
                     <p className="trip-end-date">
-                        End: {new Date(trip.end_date).toLocaleString()}
+                        End:{" "}
+                        {isEditing ? (
+                            <input
+                                type="datetime-local"
+                                className="trip-end-date"
+                                value={newEndDate}
+                                onInput={handleNewEndDateChange}
+                            />
+                        ) : (
+                            new Date(trip.end_date).toLocaleString()
+                        )}
                     </p>
-                    <p className="trip-location">Location: {trip.location}</p>
+                    <p className="trip-location">
+                        Location:{" "}
+                        {isEditing ? (
+                            <input
+                                type="text"
+                                className="trip-location"
+                                value={newLocation}
+                                onChange={handleNewLocationChange}
+                            />
+                        ) : (
+                            trip.location
+                        )}
+                    </p>
                 </div>
             )}
             <div className="idea-board-header">

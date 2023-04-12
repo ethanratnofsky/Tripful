@@ -4,18 +4,44 @@
     align-items: center;
 }
 
-button.delete-trip-button {
+button.edit-trip-button, 
+button.delete-trip-button, 
+button.save-trip-button, 
+button.cancel-trip-button,
+.back-button  {
     all: unset;
     text-decoration: none;
-    color: red;
-    border: 1px solid red;
+    color: inherit;
+    border: 1px solid black;
     padding: 10px 20px;
     border-radius: 5px;
+    margin-inline: 5px;
 }
 
-button.delete-trip-button:hover {
+button.delete-trip-button {
+    color: red;
+    border: 1px solid red;
+}
+
+button.edit-trip-button:hover,
+button.delete-trip-button:hover,
+button.save-trip-button:hover,
+button.cancel-trip-button:hover,
+.back-button:hover {
     background-color: #f2f2f2;
     cursor: pointer;
+}
+
+input.trip-name {
+    font-size: 2em;
+    font-weight: bold;
+    margin-block: 0.67em;
+}
+
+input.trip-start-date,
+input.trip-end-date,
+input.trip-location {
+    font: inherit;
 }
 
 a.create-idea-button {
@@ -28,6 +54,7 @@ a.create-idea-button {
 
 a.create-idea-button:hover {
     background-color: #f2f2f2;
+    cursor: pointer;
 }
 
 .ideas-list {
