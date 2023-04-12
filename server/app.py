@@ -1,19 +1,17 @@
 from bson import ObjectId
-from flask import Flask, request, json, jsonify, send_file
+from flask import Flask, request, json, jsonify
 from pymongo import MongoClient
 import certifi
 from uuid import uuid4
 from datetime import datetime
 # from dotenv import load_dotenv, find_dotenv
 import os
-from flask_cors import CORS
-from flask_uploads import UploadSet, IMAGES, configure_uploads
+from flask_cors import CORS, cross_origin
 
 # ********************************
 #           APP CONFIG
 # ********************************
 app = Flask(__name__)
-app.config['UPLOADED_IMAGES_DEST'] = 'static/images'
 CORS(app)
 
 # ********************************
@@ -26,8 +24,6 @@ password = "ethansq"
 cluster = MongoClient(
     f"mongodb+srv://admin:{password}@tripfulcluster.govpqrv.mongodb.net/?retryWrites=true&w=majority", tlsCAFile=certifi.where())
 db = cluster["tripful"]
-images = UploadSet('images', IMAGES)
-configure_uploads(app, images)
 
 # ********************************
 #             VIEWS
@@ -42,6 +38,7 @@ configure_uploads(app, images)
 
 
 @app.route("/api/read-trips", methods=["GET"])
+@cross_origin()
 def read_trips():
     trips = []
     trip_info = db["trips"].find()
@@ -55,9 +52,10 @@ def read_trips():
 
 
 @app.route("/api/read-ideas", methods=["GET"])
+@cross_origin()
 def read_ideas():
     ideas = []
-    idea_info = db["ideas"].find().sort([("upvotes.length", -1)])
+    idea_info = db["ideas"].find()
     for idea in list(idea_info):
         idea["_id"] = str(idea["_id"])
         ideas.append(idea)
@@ -68,6 +66,7 @@ def read_ideas():
 
 
 @app.route("/api/read-users", methods=["GET"])
+@cross_origin()
 def read_users():
     users = []
     user_info = db["users"].find()
@@ -81,6 +80,7 @@ def read_users():
 
 
 @app.route("/api/read-user", methods=["GET"])
+@cross_origin()
 def read_user():
     args = request.args
     args_dict = args.to_dict()
@@ -95,13 +95,14 @@ def read_user():
 
 
 @app.route("/api/create-trip", methods=["POST"])
+@cross_origin()
 def create_trip():
     request_data = json.loads(request.data)
 
     # lookup mongo user info from firebase user info
 
     trip = {
-       "user_id": request_data["user_id"],
+        # "created_by": "blahblah"
         "name": request_data["name"],
         "start_date": str(request_data["start_date"]),
         "end_date": str(request_data["end_date"]),
@@ -114,24 +115,9 @@ def create_trip():
 
     return "SUCCESS: Trip created"
 
-@app.route('/api/upload-image', methods=['POST'])
-def upload_image():
-    image = request.files['image']
-    trip_name = request.form['trip_name']
-    filename = images.save(image)
-    inserted_image = db["images"].insert_one({'filename': filename, 'trip_name': trip_name})
-    return jsonify({'image_id': str(inserted_image.inserted_id)})
-
-@app.route('/api/get-image/<string:trip_name>', methods=['GET'])
-def get_image(trip_name):
-    image = db["images"].find_one({'trip_name': trip_name})
-    if image:
-        return send_file(images.path(image['filename']))
-    else:
-        return jsonify({'error': 'Image not found'}), 404
-
 
 @app.route("/api/create-user", methods=["POST"])
+@cross_origin()
 def create_user():
     request_data = json.loads(request.data)
 
@@ -149,6 +135,7 @@ def create_user():
 
 
 @app.route("/api/create-idea", methods=["POST"])
+@cross_origin()
 def create_idea():
     request_data = json.loads(request.data)
 
@@ -165,16 +152,7 @@ def create_idea():
         "downvotes": []
     }
 
-    inserted_idea = db["ideas"].insert_one(idea)
-    trip = db["trips"].find_one({'_id': ObjectId(request_data["associatedTrip"])})
-    temp = trip
-    temp["ideas"].append(str(inserted_idea.inserted_id))
-    db["trips"].replace_one({'_id': ObjectId(request_data["associatedTrip"])}, temp)
-    # filter = { '_id': request_data["associatedTrip"] }
-    # newvalue = { "$push": { 'ideas': inserted_idea.inserted_id } }
-
-    # db["trips"].update_one(filter, newvalue),
-
+    db["ideas"].insert_one(idea)
 
     return "SUCCESS: Idea created"
 
@@ -182,6 +160,7 @@ def create_idea():
 
 
 @app.route("/api/read-trip-ideas", methods=["GET"])
+@cross_origin()
 def read_trip_ideas():
     args = request.args
     args_dict = args.to_dict()
@@ -200,6 +179,7 @@ def read_trip_ideas():
 
 
 @app.route("/api/read-trip", methods=["GET"])
+@cross_origin()
 def read_trip():
     args = request.args
     args_dict = args.to_dict()
@@ -214,21 +194,18 @@ def read_trip():
 
 
 @app.route("/api/read-user-trips", methods=["GET"])
+@cross_origin()
 def read_user_trips():
-    args = request.args	
-    args_dict = args.to_dict()	
-    user_id = args_dict["user_id"]	
-    trips = db["trips"].find({"user_id": user_id})	
-    trip_list = []	
-    for i in trips:	
-        i["_id"] = str(i["_id"])	
-        trip_list.append(i)	
-    return trip_list
+    request_data = json.loads(request.data)
+    trips = db["trips"].find({"created_by": request_data["created_by"]})
+
+    return trips
 
 # Put request to update a trip
 
 
 @app.route("/api/update-trip", methods=["PUT"])
+@cross_origin()
 def update_trip():
     request_data = json.loads(request.data)
     id = str(request_data["_id"])
@@ -251,6 +228,7 @@ def update_trip():
 
 
 @app.route("/api/update-idea", methods=["PUT"])
+@cross_origin()
 def update_idea():
     request_data = json.loads(request.data)
     id = str(request_data["_id"])
@@ -272,54 +250,68 @@ def update_idea():
     return "SUCCESS: Idea updated"
 
 # Put request to update  upvotes
+
+
 @app.route("/api/update-idea-upvotes", methods=["PUT"])
+@cross_origin()
 def update_idea_upvotes():
-    idea_id = request.json["id"]
-    user_id = request.json["user_id"]
+    args = request.args
+    args_dict = args.to_dict()
+    idea_id = args_dict["idea_id"]
+
     idea = db["ideas"].find_one({"_id": ObjectId(idea_id)})
-    if user_id in idea["upvotes"]:
-        db["ideas"].update_one({"_id": ObjectId(idea_id)}, {"$pull": {"upvotes": user_id}})
-        updated_idea = db["ideas"].find_one({"_id": ObjectId(idea_id)})
-        return jsonify(upvotes=updated_idea["upvotes"], downvotes=updated_idea["downvotes"], _id=idea_id)
-    elif user_id in idea["downvotes"]:
-        db["ideas"].update_one({"_id": ObjectId(idea_id)}, {"$pull": {"downvotes": user_id}, "$push": {"upvotes": user_id}})
-        updated_idea = db["ideas"].find_one({"_id": ObjectId(idea_id)})
-        return jsonify(upvotes=updated_idea["upvotes"], downvotes=updated_idea["downvotes"], _id=idea_id)
-    else:
-        db["ideas"].update_one({"_id": ObjectId(idea_id)}, {"$push": {"upvotes": user_id}})
-        updated_idea = db["ideas"].find_one({"_id": ObjectId(idea_id)})
-        return jsonify(upvotes=updated_idea["upvotes"], downvotes=updated_idea["downvotes"], _id=idea_id)
+
+    idea = {
+        "_id": idea["_id"],
+        "created_by": "Jon Doe",  # TO DO CHANGE THIS TO NAME
+        "title": idea["title"],
+        "associated_trip": idea["associated_trip"],
+        "created_at": idea["created_at"],
+        "last_edited": str(datetime.now().isoformat()),
+        "content": idea["content"],
+        "upvotes": idea["upvotes"].append(idea_id),
+        "downvotes": idea["downvotes"]
+    }
+
+    db["ideas"].replace_one({"_id": ObjectId(idea_id)}, idea)
+
+    return "SUCCESS: Idea updated"
 
 # Put request to update  downvotes
+
+
 @app.route("/api/update-idea-downvotes", methods=["PUT"])
+@cross_origin()
 def update_idea_downvotes():
-    idea_id = request.json["id"]
-    user_id = request.json["user_id"]
+    args = request.args
+    args_dict = args.to_dict()
+    idea_id = args_dict["idea_id"]
+
     idea = db["ideas"].find_one({"_id": ObjectId(idea_id)})
-    if user_id in idea["downvotes"]:
-        db["ideas"].update_one({"_id": ObjectId(idea_id)}, {"$pull": {"downvotes": user_id}})
-        updated_idea = db["ideas"].find_one({"_id": ObjectId(idea_id)})
-        return jsonify(upvotes=updated_idea["upvotes"], downvotes=updated_idea["downvotes"], _id=idea_id)
-    elif user_id in idea["upvotes"]:
-        db["ideas"].update_one({"_id": ObjectId(idea_id)}, {"$pull": {"upvotes": user_id}, "$push": {"downvotes": user_id}})
-        updated_idea =db["ideas"].find_one({"_id": ObjectId(idea_id)})
-        return jsonify(upvotes=updated_idea["upvotes"], downvotes=updated_idea["downvotes"], _id=idea_id)
-    else:
-        db["ideas"].update_one({"_id": ObjectId(idea_id)}, {"$push": {"downvotes": user_id}})
-        updated_idea = db["ideas"].find_one({"_id": ObjectId(idea_id)})
-        return jsonify(upvotes=updated_idea["upvotes"], downvotes=updated_idea["downvotes"], _id=idea_id)
+
+    idea = {
+        "_id": idea["_id"],
+        "created_by": "Jon Doe",  # TO DO CHANGE THIS TO NAME
+        "title": idea["title"],
+        "associated_trip": idea["associated_trip"],
+        "created_at": idea["created_at"],
+        "last_edited": str(datetime.now().isoformat()),
+        "content": idea["content"],
+        "upvotes": idea["upvotes"],
+        "downvotes": idea["downvotes"].append(idea_id)
+    }
+
+    db["ideas"].replace_one({"_id": ObjectId(idea_id)}, idea)
+
+    return "SUCCESS: Idea updated"
 
 # Delete request for a trip
 
 
 @app.route("/api/delete-trip", methods=["DELETE"])
+@cross_origin()
 def delete_trip():
     request_data = json.loads(request.data)
-    trip = db["trips"].find_one({"_id": ObjectId(request_data["id"])})
-
-    for idea in trip["ideas"]:
-        db["ideas"].delete_one({"_id": ObjectId(idea)})
-
     db["trips"].delete_one({"_id": ObjectId(request_data["id"])})
 
     return "SUCCESS: Deleted trip"
