@@ -120,7 +120,7 @@ const Trip = () => {
 
                 alert("Trip deleted!");
 
-                navigate(-1);
+                navigate("/");
             } catch (error) {
                 alert("Error deleting trip. Please try again later.");
                 console.log(error);

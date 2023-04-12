@@ -3,6 +3,7 @@ import "./CreateTrip.css";
 import TestImg from "../assets/test.png";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 
 const CreateTrip = () => {
     const [trip_name, setName] = useState("");
@@ -10,14 +11,46 @@ const CreateTrip = () => {
     const [end_date, setEndDate] = useState(new Date());
     const [location, setLocation] = useState("");
     const [emails, setEmails] = useState([]);
+    const [image, setImage] = useState();
+    const [imageUrl, setImageUrl] = useState("");
 
     const navigate = useNavigate();
+
+    const { currentUser } = useAuth();
+
+    const handleImageUpload = (e) => {
+        // setImage(event.target.files[0]);
+        // console.log(image);
+        setImage(e.target.files[0]);
+    };
+
+    const handleImageSubmit = async () => {
+        const formData = new FormData();
+        formData.append("image", image);
+        formData.append("trip_name", trip_name);
+
+        try {
+            const response = await fetch(
+                "http://127.0.0.1:5000/api/upload-image",
+                {
+                    method: "POST",
+                    body: formData,
+                }
+            );
+            const data = await response.json();
+            // setImageUrl(URL.createObjectURL(`/get-image/${trip_name}`));
+            setImageUrl(URL.createObjectURL(image));
+        } catch (error) {
+            console.log(error);
+        }
+    };
 
     const handleSubmit = (e) => {
         e.preventDefault();
         fetch("http://127.0.0.1:5000/api/create-trip", {
             method: "POST",
             body: JSON.stringify({
+                user_id: currentUser.uid,
                 name: trip_name,
                 start_date: start_date.toString(),
                 end_date: end_date.toString(),
@@ -98,7 +131,19 @@ const CreateTrip = () => {
                 <br></br>
                 <input type="submit" value="Submit" />
             </form>
-            <img className="trip-picture" src={TestImg} alt="Trip Picture" />
+            <br></br>
+            <div>
+                <input type="file" onChange={handleImageUpload} />
+                <button onClick={handleImageSubmit}>Upload Image</button>
+                {imageUrl && (
+                    <img
+                        src={imageUrl}
+                        alt="Uploaded image"
+                        width="300"
+                        height="200"
+                    />
+                )}
+            </div>
         </div>
     );
 };
