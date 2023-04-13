@@ -17,7 +17,7 @@ export default function Invites() {
             .then((data) => setTrips(data));
     };
 
-    console.log(trips);
+    // console.log(trips);
 
     // update trips when page first loads
     useEffect(() => {
@@ -36,9 +36,11 @@ export default function Invites() {
                     user_id: currentUser.uid,
                 }),
             });
+
+            getTrips();
         } catch (error) {
-            alert("Error accepting invite. Please try again later.");
-            console.log(error);
+            // alert("Error accepting invite. Please try again later.");
+            console.error(error);
         }
     };
 
@@ -46,7 +48,7 @@ export default function Invites() {
         <div>
             {trips.map((trip) => {
                 return (
-                    <form key={trip["_id"]}>
+                    <div key={trip["_id"]}>
                         {trip["name"]}
                         <button onClick={() => handleAccept(trip["_id"])}>
                             Accept Trip
@@ -56,7 +58,7 @@ export default function Invites() {
                     >
                         Decline Trip
                     </button> */}
-                    </form>
+                    </div>
                 );
             })}
         </div>
