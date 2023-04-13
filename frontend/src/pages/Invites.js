@@ -6,7 +6,9 @@ export default function Invites() {
     const [trips, setTrips] = useState([]);
 
     const getTrips = () => {
-        fetch(`http://127.0.0.1:5000/api/read-user-invites?user_id=${currentUser.uid}`)
+        fetch(
+            `http://127.0.0.1:5000/api/read-user-invites?user_id=${currentUser.uid}`
+        )
             .then((response) => {
                 if (response.ok) {
                     return response.json();
@@ -24,19 +26,16 @@ export default function Invites() {
 
     const handleAccept = async (trip_id) => {
         try {
-            await fetch(
-                "http://127.0.0.1:5000/api/update-accepted-invites",
-                {
-                    method: "PUT",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        trip_id: trip_id,
-                        user_id: currentUser.uid,
-                    }),
-                }
-            );
+            await fetch("http://127.0.0.1:5000/api/update-accepted-invites", {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    trip_id: trip_id,
+                    user_id: currentUser.uid,
+                }),
+            });
         } catch (error) {
             alert("Error accepting invite. Please try again later.");
             console.log(error);
@@ -45,21 +44,21 @@ export default function Invites() {
 
     return (
         <div>
-            {trips.map((trip) => {return (
-                <form key={trip["_id"]}>
-                    {trip["name"]}
-                    <button
-                        onClick={handleAccept(trip["_id"])}
-                    >
-                        Accept Trip
-                    </button>
-                    {/* <button
+            {trips.map((trip) => {
+                return (
+                    <form key={trip["_id"]}>
+                        {trip["name"]}
+                        <button onClick={() => handleAccept(trip["_id"])}>
+                            Accept Trip
+                        </button>
+                        {/* <button
                         onClick={handleDecline}
                     >
                         Decline Trip
                     </button> */}
-                </form>)
+                    </form>
+                );
             })}
         </div>
     );
-};
+}
