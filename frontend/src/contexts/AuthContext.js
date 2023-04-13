@@ -5,7 +5,7 @@ const AuthContext = React.createContext();
 
 export const useAuth = () => {
     return useContext(AuthContext);
-}
+};
 
 export const AuthProvider = ({ children }) => {
     const [currentUser, setCurrentUser] = useState();
@@ -29,4 +29,4 @@ export const AuthProvider = ({ children }) => {
             {!loading && children}
         </AuthContext.Provider>
     );
-}
+};

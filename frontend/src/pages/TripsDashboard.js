@@ -13,13 +13,19 @@ const TripsDashboard = () => {
     const [filter, setFilter] = useState("all");
 
     const getTrips = () => {
-        fetch(`http://127.0.0.1:5000/api/read-accepted-user-trips?user_id=${currentUser.uid}`)
-            .then((response) => {
-                if (response.ok) {
-                    return response.json();
-                }
-            })
-            .then((data) => setTrips(data));
+        {
+            currentUser &&
+                fetch(
+                    `http://127.0.0.1:5000/api/read-accepted-user-trips?user_id=${currentUser.uid}`
+                )
+                    // fetch("http://127.0.0.1:5000/api/read-trips")
+                    .then((response) => {
+                        if (response.ok) {
+                            return response.json();
+                        }
+                    })
+                    .then((data) => setTrips(data));
+        }
     };
 
     // update trips when page first loads
