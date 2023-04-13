@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 
 import "./TripsDashboard.css";
 
 const TripsDashboard = () => {
+    const { currentUser } = useAuth();
     const [trips, setTrips] = useState([]);
     const [displayedTrips, setDisplayedTrips] = useState([]);
     const [displayedTrip, setDisplayedTrip] = useState(null);
@@ -11,7 +13,7 @@ const TripsDashboard = () => {
     const [filter, setFilter] = useState("all");
 
     const getTrips = () => {
-        fetch("http://127.0.0.1:5000/api/read-trips")
+        fetch(`http://127.0.0.1:5000/api/read-accepted-user-trips?user_id=${currentUser.uid}`)
             .then((response) => {
                 if (response.ok) {
                     return response.json();

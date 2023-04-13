@@ -25,6 +25,14 @@ const Navbar = () => {
                                 Create Trip
                             </Link>
                         )}
+                        {location.pathname !== "/invites" && (
+                            <Link
+                                to="/invites"
+                                className="create-trip-button"
+                            >
+                                Manage Invites
+                            </Link>
+                        )}
                         {location.pathname !== "/profile" && (
                             <Link to="/profile">
                                 <img

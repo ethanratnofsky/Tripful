@@ -14,6 +14,7 @@ import Login from "./pages/Login";
 import TripsDashboard from "./pages/TripsDashboard";
 import CreateTrip from "./pages/CreateTrip";
 import Profile from "./pages/Profile";
+import Invites from "./pages/Invites";
 import Trip from "./pages/Trip";
 import CreateIdea from "./pages/CreateIdea";
 
@@ -39,6 +40,7 @@ const router = createBrowserRouter(
                 <Route path="create-trip" element={<CreateTrip />} />
                 <Route path="create-idea/:tripId" element={<CreateIdea />} />
                 <Route path="profile" element={<Profile />} />
+                <Route path="invites" element={<Invites />} />
                 <Route path="trip/:tripId" element={<Trip />} />
             </Route>
         </Route>
