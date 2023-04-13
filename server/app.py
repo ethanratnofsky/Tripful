@@ -106,9 +106,13 @@ def create_trip():
         "start_date": str(request_data["start_date"]),
         "end_date": str(request_data["end_date"]),
         "location": request_data["location"],
+        "pending_guests": request_data["invites"],
+        "accepted_guests": [],
         "guests": [],
         "ideas": []
     }
+
+    trip["accepted_guests"].append(trip["user_id"])
 
     db["trips"].insert_one(trip)
 
@@ -213,17 +217,48 @@ def read_trip():
 # Get request to read trips for a specific user
 
 
-@app.route("/api/read-user-trips", methods=["GET"])
-def read_user_trips():
+@app.route("/api/read-accepted-user-trips", methods=["GET"])
+def read_accepted_user_trips():
     args = request.args	
     args_dict = args.to_dict()	
-    user_id = args_dict["user_id"]	
-    trips = db["trips"].find({"user_id": user_id})	
-    trip_list = []	
+    user_id = args_dict["user_id"]
+    trips = db["trips"].find()
+    # trips = db["trips"].find({"pending_guests": {"$in": user_id}})	
+    trip_list = []
     for i in trips:	
-        i["_id"] = str(i["_id"])	
-        trip_list.append(i)	
+        i["_id"] = str(i["_id"])
+        if (user_id in i["accepted_guests"]):
+            trip_list.append(i)
+
+    print(trip_list)
     return trip_list
+
+
+@app.route("/api/read-user-invites", methods=["GET"])
+def read_user_invites():
+    args = request.args	
+    args_dict = args.to_dict()	
+    user_id = args_dict["user_id"]
+    trips = db["trips"].find()
+    # trips = db["trips"].find({"pending_guests": {"$in": user_id}})	
+    trip_list = []
+    for i in trips:	
+        i["_id"] = str(i["_id"])
+        if (user_id in i["pending_guests"]):
+            trip_list.append(i)
+
+    return trip_list
+
+# Put request to update  upvotes
+@app.route("/api/update-accepted-invites", methods=["PUT"])
+def update_accepted_invites():
+    trip_id = request.json["trip_id"]
+    user_id = request.json["user_id"]
+
+    db["trips"].update_one({"_id": ObjectId(trip_id)}, {"$pull": {"pending_guests": user_id}})
+    db["trips"].update_one({"_id": ObjectId(trip_id)}, {"$push": {"accepted_guests": user_id}})
+    return "SUCCESS!"
+
 
 # Put request to update a trip
 
@@ -240,7 +275,9 @@ def update_trip():
         "end_date": request_data["end_date"],
         "location": request_data["location"],
         "guests": request_data["guests"],
-        "ideas": request_data["ideas"]
+        "ideas": request_data["ideas"],
+        "accepted_guests": request_data["accepted_guests"],
+        "pending_guests": request_data["pending_guests"],
     }
 
     db["trips"].replace_one({"_id": ObjectId(id)}, trip)

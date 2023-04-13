@@ -1,18 +1,38 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./CreateTrip.css";
 import TestImg from "../assets/test.png";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
+import Autocomplete from '@mui/material/Autocomplete';
+import TextField from '@mui/material/TextField';
 
 const CreateTrip = () => {
     const [trip_name, setName] = useState("");
     const [start_date, setStartDate] = useState(new Date());
     const [end_date, setEndDate] = useState(new Date());
     const [location, setLocation] = useState("");
-    const [emails, setEmails] = useState([]);
+    const [invites, setInvites] = useState([]);
     const [image, setImage] = useState();
     const [imageUrl, setImageUrl] = useState("");
+    const [names, setNames] = useState([]);
+
+    console.log(invites.map((invite) => {return invite["_id"]}));
+
+    const getNames = () => {
+        fetch("http://127.0.0.1:5000/api/read-users")
+            .then((response) => {
+                if (response.ok) {
+                    return response.json();
+                }
+            })
+            .then((data) => setNames(data.filter((i)=>(i["_id"] !== currentUser.uid))));
+    };
+
+    // update names when page first loads
+    useEffect(() => {
+        getNames();
+    }, []);
 
     const navigate = useNavigate();
 
@@ -55,7 +75,7 @@ const CreateTrip = () => {
                 start_date: start_date.toString(),
                 end_date: end_date.toString(),
                 location: location,
-                // emails: emails,
+                invites: invites.map((invite) => {return invite["_id"]}),
             }),
             header: {
                 "Content-type": "application/json; charset=UTF-8",
@@ -71,7 +91,7 @@ const CreateTrip = () => {
                 setStartDate(new Date());
                 setEndDate(new Date());
                 setLocation("");
-                setEmails([]);
+                setInvites([]);
             });
     };
 
@@ -116,9 +136,25 @@ const CreateTrip = () => {
                     onInput={(e) => setLocation(e.target.value)}
                 ></input>
                 <br></br>
-                {/* <label htmlFor="invite">Invite:</label>
+                <label htmlFor="invite">Invite:</label>
                 <br></br>
-                <input
+                <Autocomplete
+                    style={{width: '320px'}}
+                    multiple
+                    id="invite"
+                    value={invites}
+                    onChange={(e, newValue) => {setInvites(newValue)}}
+                    options={names}
+                    getOptionLabel={(option) => option.name}
+                    filterSelectedOptions
+                    renderInput={(params) => (
+                        <TextField
+                            {...params}
+                            placeholder="Names"
+                        />
+                    )}
+                />
+                {/* <input
                     type="email"
                     id="invite"
                     placeholder="Email(s)"
