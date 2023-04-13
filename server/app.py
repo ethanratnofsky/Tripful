@@ -275,7 +275,9 @@ def update_trip():
         "end_date": request_data["end_date"],
         "location": request_data["location"],
         "guests": request_data["guests"],
-        "ideas": request_data["ideas"]
+        "ideas": request_data["ideas"],
+        "accepted_guests": request_data["accepted_guests"],
+        "pending_guests": request_data["pending_guests"],
     }
 
     db["trips"].replace_one({"_id": ObjectId(id)}, trip)
