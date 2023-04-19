@@ -1,0 +1,20 @@
+.invites-container .trip-invite {
+    background-color: lightgray;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+.invites-container .accept-trip-button {
+    background-color: lightgreen;
+    color: green;
+    border: 1px solid green;
+}
+
+.invites-container .accept-trip-button:hover {
+    background-color: green;
+    color: white;
+}

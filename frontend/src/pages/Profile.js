@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 import { auth } from "../../firebase.config";
 import { useAuth } from "../contexts/AuthContext";
+import { formatPhoneNumber } from "../utils/utils";
 
 import "./Profile.css";
 
@@ -52,10 +53,16 @@ const Profile = () => {
                 <div className="user-info">
                     <h1>Hey, {user?.name}!</h1>
                     <p>
-                        <strong>Phone Number:</strong> {currentUser.phoneNumber}
+                        <strong>Phone Number:</strong> +1{" "}
+                        {formatPhoneNumber(currentUser.phoneNumber.slice(2))}
                     </p>
-                    <button onClick={handleEditProfile}>Edit Profile</button>
-                    <button onClick={handleLogout}>Logout</button>
+                    {/* <button onClick={handleEditProfile}>Edit Profile</button> */}
+                    <button
+                        className="delete-trip-button"
+                        onClick={handleLogout}
+                    >
+                        Logout
+                    </button>
                 </div>
             </div>
         </div>
