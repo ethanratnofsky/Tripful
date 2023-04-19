@@ -26,3 +26,21 @@
     width: 600px;
     margin: 0 auto;
 }
+
+.trip-img-input-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-inline: 100px;
+}
+
+.trip-form-container .trip-img-input {
+    margin-top: 20px;
+    width: 100%;
+}
+
+.trip-form-container .trip-img-upload {
+    margin-top: 20px;
+    width: 100%;
+}

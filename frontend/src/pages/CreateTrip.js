@@ -175,9 +175,7 @@ const CreateTrip = () => {
                 <input type="submit" value="Submit" />
             </form>
             <br></br>
-            <div>
-                <input type="file" onChange={handleImageUpload} />
-                <button onClick={handleImageSubmit}>Upload Image</button>
+            <div className="trip-img-input-container">
                 {imageUrl && (
                     <img
                         src={imageUrl}
@@ -186,6 +184,14 @@ const CreateTrip = () => {
                         height="200"
                     />
                 )}
+                <input
+                    className="trip-img-input"
+                    type="file"
+                    onChange={handleImageUpload}
+                />
+                <button className="trip-img-upload" onClick={handleImageSubmit}>
+                    Upload Image
+                </button>
             </div>
         </div>
     );
