@@ -1,0 +1,24 @@
+.trip-card {
+    height: 200px;
+    width: 200px;
+    background: #d5d5d5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    border-radius: 5px;
+    text-decoration: none;
+    color: white;
+    margin: 10px;
+    text-align: center;
+}
+
+.trip-card:not(.create-trip-card)::before {
+    content: "";
+    background-color: black;
+    height: 200px;
+    width: 200px;
+    position: absolute;
+    opacity: 0.25;
+    border-radius: 5px;
+}

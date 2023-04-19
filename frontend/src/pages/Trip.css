@@ -1,15 +1,16 @@
-.trip-header, .idea-board-header {
+.trip-header,
+.idea-board-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-button.edit-trip-button, 
-button.delete-trip-button, 
-button.save-trip-button, 
+button.edit-trip-button,
+button.delete-trip-button,
+button.save-trip-button,
 button.cancel-trip-button,
 button.accept-trip-button,
-.back-button  {
+.back-button {
     all: unset;
     text-decoration: none;
     color: inherit;
