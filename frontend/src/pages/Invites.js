@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../contexts/AuthContext";
 
-export default function Invites() {
+import "./Invites.css";
+
+const Invites = () => {
     const { currentUser } = useAuth();
     const [trips, setTrips] = useState([]);
 
@@ -45,12 +47,15 @@ export default function Invites() {
     };
 
     return (
-        <div>
+        <div className="invites-container">
             {trips.map((trip) => {
                 return (
-                    <div key={trip["_id"]}>
+                    <div key={trip["_id"]} className="trip-invite">
                         {trip["name"]}
-                        <button onClick={() => handleAccept(trip["_id"])}>
+                        <button
+                            className="accept-trip-button"
+                            onClick={() => handleAccept(trip["_id"])}
+                        >
                             Accept Trip
                         </button>
                         {/* <button
@@ -63,4 +68,6 @@ export default function Invites() {
             })}
         </div>
     );
-}
+};
+
+export default Invites;

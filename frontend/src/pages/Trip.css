@@ -8,6 +8,7 @@ button.edit-trip-button,
 button.delete-trip-button, 
 button.save-trip-button, 
 button.cancel-trip-button,
+button.accept-trip-button,
 .back-button  {
     all: unset;
     text-decoration: none;
@@ -27,6 +28,7 @@ button.edit-trip-button:hover,
 button.delete-trip-button:hover,
 button.save-trip-button:hover,
 button.cancel-trip-button:hover,
+button.accept-trip-button:hover,
 .back-button:hover {
     background-color: #f2f2f2;
     cursor: pointer;
