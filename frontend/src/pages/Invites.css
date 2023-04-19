@@ -18,3 +18,7 @@
     background-color: green;
     color: white;
 }
+
+.invites-container .no-trips-message {
+    text-align: center;
+}

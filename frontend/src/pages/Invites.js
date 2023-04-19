@@ -48,24 +48,30 @@ const Invites = () => {
 
     return (
         <div className="invites-container">
-            {trips.map((trip) => {
-                return (
-                    <div key={trip["_id"]} className="trip-invite">
-                        {trip["name"]}
-                        <button
-                            className="accept-trip-button"
-                            onClick={() => handleAccept(trip["_id"])}
-                        >
-                            Accept Trip
-                        </button>
-                        {/* <button
+            {trips.length !== 0 ? (
+                trips.map((trip) => {
+                    return (
+                        <div key={trip["_id"]} className="trip-invite">
+                            {trip["name"]}
+                            <button
+                                className="accept-trip-button"
+                                onClick={() => handleAccept(trip["_id"])}
+                            >
+                                Accept Trip
+                            </button>
+                            {/* <button
                         onClick={handleDecline}
                     >
                         Decline Trip
                     </button> */}
-                    </div>
-                );
-            })}
+                        </div>
+                    );
+                })
+            ) : (
+                <h3 className="no-trips-message">
+                    You haven't been invited to any trips yet!
+                </h3>
+            )}
         </div>
     );
 };
