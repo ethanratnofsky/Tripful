@@ -3,23 +3,10 @@ import { signInWithPhoneNumber, RecaptchaVerifier } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 
 import { auth } from "../../firebase.config";
+import { formatPhoneNumber } from "../utils/utils";
 
 import "./Login.css";
-
-const formatPhoneNumber = (phoneNumberString) => {
-    const cleaned = phoneNumberString.replace(/\D/g, "");
-
-    if (cleaned.length < 4) return null;
-
-    const match = cleaned.match(/(\d{3})(\d{1,3})?(\d{1,4})?$/);
-
-    if (match)
-        return `(${match[1]})${match[2] !== undefined ? ` ${match[2]}` : ""}${
-            match[3] !== undefined ? `-${match[3]}` : ""
-        }`;
-
-    return null;
-};
+import Image from "../assets/LoginPic.png";
 
 const Login = () => {
     const [countryCode, setCountryCode] = useState("+1");
@@ -171,8 +158,18 @@ const Login = () => {
     }, [phoneNumber]);
 
     return (
-        <div className="login-container">
-            <form id="login-form" onSubmit={handleSubmit}>
+        <div
+            className="login-container"
+            style={{
+                backgroundImage: `url(${Image})`,
+                backgroundRepeat: 'none',
+                objectFit: 'cover'
+            }}
+        >
+            <form
+                id="login-form"
+                onSubmit={handleSubmit}
+            >
                 <h1>Login or Register</h1>
                 <p>Please enter your phone number.</p>
                 <div>
