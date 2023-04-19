@@ -4,8 +4,8 @@ import TestImg from "../assets/test.png";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
-import Autocomplete from '@mui/material/Autocomplete';
-import TextField from '@mui/material/TextField';
+import Autocomplete from "@mui/material/Autocomplete";
+import TextField from "@mui/material/TextField";
 
 const CreateTrip = () => {
     const [trip_name, setName] = useState("");
@@ -17,7 +17,13 @@ const CreateTrip = () => {
     const [imageUrl, setImageUrl] = useState("");
     const [names, setNames] = useState([]);
 
-    console.log(invites.map((invite) => {return invite["_id"]}));
+    const { currentUser } = useAuth();
+
+    console.log(
+        invites.map((invite) => {
+            return invite["_id"];
+        })
+    );
 
     const getNames = () => {
         fetch("http://127.0.0.1:5000/api/read-users")
@@ -26,7 +32,9 @@ const CreateTrip = () => {
                     return response.json();
                 }
             })
-            .then((data) => setNames(data.filter((i)=>(i["_id"] !== currentUser.uid))));
+            .then((data) =>
+                setNames(data.filter((i) => i["_id"] !== currentUser.uid))
+            );
     };
 
     // update names when page first loads
@@ -35,8 +43,6 @@ const CreateTrip = () => {
     }, []);
 
     const navigate = useNavigate();
-
-    const { currentUser } = useAuth();
 
     const handleImageUpload = (e) => {
         // setImage(event.target.files[0]);
@@ -75,7 +81,9 @@ const CreateTrip = () => {
                 start_date: start_date.toString(),
                 end_date: end_date.toString(),
                 location: location,
-                invites: invites.map((invite) => {return invite["_id"]}),
+                invites: invites.map((invite) => {
+                    return invite["_id"];
+                }),
             }),
             header: {
                 "Content-type": "application/json; charset=UTF-8",
@@ -139,19 +147,18 @@ const CreateTrip = () => {
                 <label htmlFor="invite">Invite:</label>
                 <br></br>
                 <Autocomplete
-                    style={{width: '320px'}}
+                    style={{ width: "320px" }}
                     multiple
                     id="invite"
                     value={invites}
-                    onChange={(e, newValue) => {setInvites(newValue)}}
+                    onChange={(e, newValue) => {
+                        setInvites(newValue);
+                    }}
                     options={names}
                     getOptionLabel={(option) => option.name}
                     filterSelectedOptions
                     renderInput={(params) => (
-                        <TextField
-                            {...params}
-                            placeholder="Names"
-                        />
+                        <TextField {...params} placeholder="Names" />
                     )}
                 />
                 {/* <input

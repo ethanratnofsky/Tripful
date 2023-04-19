@@ -87,7 +87,6 @@ def read_user():
     user_id = args_dict["user_id"]
 
     user = db["users"].find_one({"_id": user_id})
-    print(user)
 
     return user
 
@@ -230,7 +229,6 @@ def read_accepted_user_trips():
         if (user_id in i["accepted_guests"]):
             trip_list.append(i)
 
-    print(trip_list)
     return trip_list
 
 

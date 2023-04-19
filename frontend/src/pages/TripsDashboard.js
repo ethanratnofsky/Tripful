@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
+import TripCard from "../components/TripCard";
 
 import "./TripsDashboard.css";
 
@@ -84,19 +85,20 @@ const TripsDashboard = () => {
                 </label>
             </div>
             <div className="trips-container">
-                <Link to="/create-trip" className="trip-card">
+                <Link to="/create-trip" className="create-trip-card trip-card">
                     +
                 </Link>
 
                 {/* render trips */}
-                {displayedTrips.map((trip) => (
-                    <Link
-                        to={`/trip/${trip._id}`}
-                        className="trip-card"
-                        key={trip._id}
-                    >
-                        <h2>{trip["name"]}</h2>
-                    </Link>
+                {displayedTrips.map((trip, index) => (
+                    // <Link
+                    //     to={`/trip/${trip._id}`}
+                    //     className="trip-card"
+                    //     key={trip._id}
+                    // >
+                    //     <h2>{trip["name"]}</h2>
+                    // </Link>
+                    <TripCard key={index} trip={trip} />
                 ))}
             </div>
             {displayedTrip !== null && (
