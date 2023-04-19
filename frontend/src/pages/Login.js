@@ -6,6 +6,7 @@ import { auth } from "../../firebase.config";
 import { formatPhoneNumber } from "../utils/utils";
 
 import "./Login.css";
+import Image from "../assets/LoginPic.png";
 
 const Login = () => {
     const [countryCode, setCountryCode] = useState("+1");
@@ -157,8 +158,18 @@ const Login = () => {
     }, [phoneNumber]);
 
     return (
-        <div className="login-container">
-            <form id="login-form" onSubmit={handleSubmit}>
+        <div
+            className="login-container"
+            style={{
+                backgroundImage: `url(${Image})`,
+                backgroundRepeat: 'none',
+                objectFit: 'cover'
+            }}
+        >
+            <form
+                id="login-form"
+                onSubmit={handleSubmit}
+            >
                 <h1>Login or Register</h1>
                 <p>Please enter your phone number.</p>
                 <div>
